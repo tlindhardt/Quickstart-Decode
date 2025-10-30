@@ -7,3 +7,9 @@ class FieldCentricHivemindTeleOp : BaseTele(false)
 
 @TeleOp(name = "Hivemind - Bot Centric")
 class BotCentricHivemindTeleOp : BaseTele()
+
+@TeleOp(name = "Hivemind - TeleOp Jace")
+class HivemindTeleOpJace : TeleOpJace(false)
+
+@TeleOp(name = "Hivemind - TeleOp Jace drive")
+class HivemindTeleOpJaceDrive : TeleOpJaceDrive(false)
