@@ -7,6 +7,9 @@ import com.pedropathing.geometry.Pose
 import com.pedropathing.paths.PathChain
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.DcMotor
+import com.qualcomm.robotcore.hardware.DcMotorEx
+import com.qualcomm.robotcore.hardware.DcMotorSimple
+import com.qualcomm.robotcore.hardware.PIDFCoefficients
 import com.qualcomm.robotcore.hardware.Servo
 import com.qualcomm.robotcore.hardware.VoltageSensor
 import com.qualcomm.robotcore.util.ElapsedTime
@@ -27,15 +30,20 @@ abstract class BaseAuto : LinearOpMode() {
     lateinit var endPath: PathChain
     lateinit var shootTimer: ElapsedTime
     lateinit var feeder: Servo
-    lateinit var shooter: DcMotor
+    lateinit var shooter: DcMotorEx
     lateinit var voltageSensor: VoltageSensor
 
     abstract fun buildPathList(): List<Pose>
 
     override fun runOpMode() {
         feeder = hardwareMap.get(Servo::class.java, "feeder");
-        shooter = hardwareMap.get(DcMotor::class.java, "shooter");
+        shooter = hardwareMap.get(DcMotorEx::class.java, "shooter");
         voltageSensor = hardwareMap.get(VoltageSensor::class.java, "Control Hub")
+        shooter.direction = DcMotorSimple.Direction.FORWARD
+        shooter.mode = DcMotor.RunMode.RUN_USING_ENCODER
+        shooter.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,
+            PIDFCoefficients(200.0, 0.0, 20.0, 14.5 * 12 / voltageSensor.voltage)
+        )
         shootTimer = ElapsedTime()
         follower = Constants.createFollower(hardwareMap)
         val telemetryM = PanelsTelemetry.telemetry
