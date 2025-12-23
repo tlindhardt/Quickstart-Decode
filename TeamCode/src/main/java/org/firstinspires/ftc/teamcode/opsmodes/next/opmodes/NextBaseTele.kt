@@ -1,20 +1,13 @@
 package org.firstinspires.ftc.teamcode.opsmodes.next.opmodes
 
-import dev.nextftc.core.commands.delays.Delay
-import dev.nextftc.core.commands.groups.SequentialGroup
-import dev.nextftc.core.commands.utility.InstantCommand
 import dev.nextftc.core.components.BindingsComponent
-import dev.nextftc.core.components.SubsystemComponent
 import dev.nextftc.extensions.pedro.PedroComponent
 import dev.nextftc.extensions.pedro.PedroDriverControlled
 import dev.nextftc.ftc.ActiveOpMode
 import dev.nextftc.ftc.Gamepads
 import dev.nextftc.ftc.NextFTCOpMode
 import dev.nextftc.ftc.components.BulkReadComponent
-import org.firstinspires.ftc.teamcode.opsmodes.next.subsystems.Feeder
-import org.firstinspires.ftc.teamcode.opsmodes.next.subsystems.Shooter
 import org.firstinspires.ftc.teamcode.opsmodes.pedroPathing.Constants
-import kotlin.time.Duration.Companion.seconds
 
 abstract class NextBaseTele(val botCentric: Boolean = true) : NextFTCOpMode() {
     var isShooting: Boolean = false
@@ -22,34 +15,34 @@ abstract class NextBaseTele(val botCentric: Boolean = true) : NextFTCOpMode() {
     init {
         addComponents(
             PedroComponent(Constants::createFollower),
-            SubsystemComponent(Shooter, Feeder),
+//            SubsystemComponent(Shooter, Feeder),
             BulkReadComponent,
             BindingsComponent
         )
     }
 
     override fun onStartButtonPressed() {
-        // Turn on shooter if pressed 30% at least
-        Gamepads.gamepad2.rightTrigger
-            .greaterThan(.3)
-            .whenBecomesTrue { Shooter.on.schedule() }
-            .whenBecomesFalse { Shooter.off.schedule() }
-
-        // Fire shot if shooter is running and if the fire button is pressed.
-        // Only allow 1 shot at a time and have a .3 second wait between shots.
-        (Gamepads.gamepad2.rightTrigger.greaterThan(0.3) and Gamepads.gamepad2.a)
-            .whenBecomesTrue {
-                if (!isShooting) {
-                    SequentialGroup(
-                        InstantCommand { isShooting = true },
-                        Feeder.open,
-                        Delay(0.2.seconds),
-                        Feeder.close,
-                        Delay(0.3.seconds),
-                        InstantCommand { isShooting = false }
-                    ).schedule()
-                }
-            }
+//        // Turn on shooter if pressed 30% at least
+//        Gamepads.gamepad2.rightTrigger
+//            .greaterThan(.3)
+//            .whenBecomesTrue { Shooter.on.schedule() }
+//            .whenBecomesFalse { Shooter.off.schedule() }
+//
+//        // Fire shot if shooter is running and if the fire button is pressed.
+//        // Only allow 1 shot at a time and have a .3 second wait between shots.
+//        (Gamepads.gamepad2.rightTrigger.greaterThan(0.3) and Gamepads.gamepad2.a)
+//            .whenBecomesTrue {
+//                if (!isShooting) {
+//                    SequentialGroup(
+//                        InstantCommand { isShooting = true },
+//                        Feeder.open,
+//                        Delay(0.2.seconds),
+//                        Feeder.close,
+//                        Delay(0.3.seconds),
+//                        InstantCommand { isShooting = false }
+//                    ).schedule()
+//                }
+//            }
     }
 
     override fun onInit() {
