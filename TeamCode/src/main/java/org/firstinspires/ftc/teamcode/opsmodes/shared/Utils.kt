@@ -1,19 +1,16 @@
 package org.firstinspires.ftc.teamcode.opsmodes.shared
 
-import com.qualcomm.robotcore.hardware.VoltageSensor
+import kotlin.math.pow
 
 class Utils {
     companion object {
-        fun getShootingPower(voltageSensor: VoltageSensor): Double {
-            if (voltageSensor.voltage < 12.0) {
-                return 0.75
-            } else if (voltageSensor.voltage < 12.3) {
-                return 0.70
-            } else if (voltageSensor.voltage < 13.0) {
-                return 0.65
-            } else {
-                return .65
-            }
+
+        fun getDistanceFromTags(ta: Double): Double {
+            return 72.42571 * ta.pow(-0.5444446)
+        }
+
+        fun getRpmFromDistance(distance: Double): Double {
+            return 951.834 + 10.48168 * distance - 0.03041669 * distance.pow(2)
         }
     }
 }

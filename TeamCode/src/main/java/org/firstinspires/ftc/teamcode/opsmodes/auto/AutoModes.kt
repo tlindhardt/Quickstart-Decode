@@ -4,7 +4,7 @@ import com.pedropathing.geometry.Pose
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 
 @Autonomous(name = "Hivemind - Blue Bottom")
-open class BlueBottomHivemindAuto : BaseAuto() {
+open class BlueBottomHivemindAuto(isBlue: Boolean = true) : BaseAuto(isBlue) {
     override fun buildPathList(): List<Pose> {
         return listOf(
             Pose(0.0, 0.0),
@@ -15,7 +15,7 @@ open class BlueBottomHivemindAuto : BaseAuto() {
 }
 
 @Autonomous(name = "Hivemind - Red Bottom")
-class RedBottomHivemindAuto : BlueBottomHivemindAuto() {
+class RedBottomHivemindAuto : BlueBottomHivemindAuto(false) {
     override fun buildPathList(): List<Pose> {
         val pathList = super.buildPathList()
         return listOf(
@@ -27,7 +27,7 @@ class RedBottomHivemindAuto : BlueBottomHivemindAuto() {
 }
 
 @Autonomous(name = "Hivemind - Blue Top")
-open class BlueTopHivemindAuto : BaseAuto() {
+open class BlueTopHivemindAuto(isBlue: Boolean = true) : BaseAuto(isBlue) {
     override fun buildPathList(): List<Pose> {
         return listOf(
             Pose(0.0, 0.0),
@@ -38,7 +38,7 @@ open class BlueTopHivemindAuto : BaseAuto() {
 }
 
 @Autonomous(name = "Hivemind - Red Top")
-class RedTopHivemindAuto : BlueTopHivemindAuto() {
+class RedTopHivemindAuto : BlueTopHivemindAuto(false) {
     override fun buildPathList(): List<Pose> {
         val pathList = super.buildPathList()
         return listOf(
