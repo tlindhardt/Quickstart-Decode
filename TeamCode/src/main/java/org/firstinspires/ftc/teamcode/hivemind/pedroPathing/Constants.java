@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opsmodes.pedroPathing;
+package org.firstinspires.ftc.teamcode.hivemind.pedroPathing;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opsmodes.next.subsystems
+package org.firstinspires.ftc.teamcode.hivemind.subsystems
 
 import dev.nextftc.core.subsystems.Subsystem
 import dev.nextftc.hardware.impl.ServoEx

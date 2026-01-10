@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opsmodes.next.opmodes
+package org.firstinspires.ftc.teamcode.hivemind.auto
 
 import com.pedropathing.geometry.Pose
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
