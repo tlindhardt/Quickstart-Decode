@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.hivemind.subsystems
 
+import com.bylazar.configurables.annotations.Configurable
 import dev.nextftc.control.ControlSystem
 import dev.nextftc.control.KineticState
 import dev.nextftc.control.builder.controlSystem
@@ -11,6 +12,7 @@ import dev.nextftc.hardware.controllable.RunToVelocity
 import dev.nextftc.hardware.impl.MotorEx
 
 
+@Configurable
 object Flywheel : Subsystem {
     private const val OFF = 0.0
     private const val ON = 1000.0

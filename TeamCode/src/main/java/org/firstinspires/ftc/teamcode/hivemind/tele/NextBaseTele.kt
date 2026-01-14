@@ -33,24 +33,24 @@ abstract class NextBaseTele(val botCentric: Boolean = true) : NextFTCOpMode() {
     override fun onStartButtonPressed() {
         // DRIVER CONTROLS
         Gamepads.gamepad1.rightTrigger.greaterThan(.3)
-            .whenTrue(Intake.forward)
-            .whenFalse(Intake.off)
+            .whenTrue { Intake.forward.schedule() }
+            .whenFalse { Intake.off.schedule() }
         Gamepads.gamepad1.leftTrigger.greaterThan(.3)
-            .whenTrue(Intake.reverse)
-            .whenFalse(Intake.off)
+            .whenTrue { Intake.reverse.schedule() }
+            .whenFalse { Intake.off.schedule() }
 
         // SHOOTER CONTROLS
         Gamepads.gamepad2.rightTrigger.greaterThan(.3)
-            .whenTrue(Flywheel.on)
-            .whenFalse(Flywheel.off)
+            .whenTrue { Flywheel.on.schedule() }
+            .whenFalse { Flywheel.off.schedule() }
         Gamepads.gamepad2.square.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
-            .whenTrue(
+            .whenTrue {
                 SequentialGroup(
                     Fries.fireLeft,
                     Delay(0.2.seconds),
                     Fries.intakeLeft
-                )
-            )
+                ).schedule()
+            }
         Gamepads.gamepad2.triangle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenTrue(
                 SequentialGroup(
