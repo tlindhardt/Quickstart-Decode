@@ -13,8 +13,10 @@ import dev.nextftc.ftc.ActiveOpMode
 import dev.nextftc.ftc.NextFTCOpMode
 import dev.nextftc.ftc.components.BulkReadComponent
 import org.firstinspires.ftc.teamcode.hivemind.pedroPathing.Constants
-import org.firstinspires.ftc.teamcode.hivemind.subsystems.Feeder
-import org.firstinspires.ftc.teamcode.hivemind.subsystems.Shooter
+import org.firstinspires.ftc.teamcode.hivemind.subsystems.Flywheel
+import org.firstinspires.ftc.teamcode.hivemind.subsystems.Fries
+import org.firstinspires.ftc.teamcode.hivemind.subsystems.Hood
+import org.firstinspires.ftc.teamcode.hivemind.subsystems.Intake
 import kotlin.time.Duration.Companion.seconds
 
 abstract class NextBaseAuto : NextFTCOpMode() {
@@ -24,7 +26,7 @@ abstract class NextBaseAuto : NextFTCOpMode() {
     init {
         addComponents(
             PedroComponent(Constants::createFollower),
-            SubsystemComponent(Shooter, Feeder),
+            SubsystemComponent(Flywheel, Fries, Hood, Intake),
             BulkReadComponent
         )
     }
@@ -34,38 +36,21 @@ abstract class NextBaseAuto : NextFTCOpMode() {
 
     override fun onStartButtonPressed() {
         SequentialGroup(
-            // Wait 3 seconds
+            // Setup
             Delay(1.seconds),
-
-            // Start shooter
-            Shooter.on,
-
-            // Drive to shoot location
+            Fries.intakeAll,
+            Intake.forward,
+            Flywheel.on,
             FollowPath(shootPath),
 
-            // First shot
-            Delay(3.seconds),
-            Feeder.open,
-            Delay(0.2.seconds),
-            Feeder.close,
-
-            // Second shot
-            Delay(3.seconds),
-            Feeder.open,
-            Delay(0.2.seconds),
-            Feeder.close,
-
-            // Third shot
-            Delay(3.seconds),
-            Feeder.open,
-            Delay(0.2.seconds),
-            Feeder.close,
-
-            // Turn off shooter
-            Shooter.off,
+            // Shoot
+            Intake.off,
+            Fries.fireAll,
+            Flywheel.off,
 
             // Drive to park location
             FollowPath(endPath),
+            Fries.intakeAll,
         )()
     }
 
