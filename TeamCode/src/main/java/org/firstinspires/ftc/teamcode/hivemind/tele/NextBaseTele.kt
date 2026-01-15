@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.hivemind.subsystems.Intake
 import kotlin.time.Duration.Companion.seconds
 
 abstract class NextBaseTele(val botCentric: Boolean = true) : NextFTCOpMode() {
+    private var lastAdjustTime = 0.0
 
     init {
         addComponents(
@@ -41,10 +42,9 @@ abstract class NextBaseTele(val botCentric: Boolean = true) : NextFTCOpMode() {
 
         // SHOOTER CONTROLS
         Gamepads.gamepad2.rightTrigger.greaterThan(.3)
-            .whenTrue { Flywheel.on.schedule() }
-            .whenFalse { Flywheel.off.schedule() }
-        Gamepads.gamepad2.square
-//        Gamepads.gamepad2.square.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
+            .whenTrue { Flywheel.close.schedule() }
+//            .whenFalse { Flywheel.off.schedule() }
+        Gamepads.gamepad2.square.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenTrue {
                 SequentialGroup(
                     Fries.fireLeft,
@@ -52,8 +52,7 @@ abstract class NextBaseTele(val botCentric: Boolean = true) : NextFTCOpMode() {
                     Fries.intakeLeft
                 ).schedule()
             }
-        Gamepads.gamepad2.triangle
-//        Gamepads.gamepad2.triangle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
+        Gamepads.gamepad2.triangle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenTrue {
                 SequentialGroup(
                     Fries.fireCenter,
@@ -61,8 +60,7 @@ abstract class NextBaseTele(val botCentric: Boolean = true) : NextFTCOpMode() {
                     Fries.intakeCenter
                 ).schedule()
             }
-        Gamepads.gamepad2.circle
-//        Gamepads.gamepad2.circle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
+        Gamepads.gamepad2.circle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenTrue {
                 SequentialGroup(
                     Fries.fireRight,
@@ -70,8 +68,7 @@ abstract class NextBaseTele(val botCentric: Boolean = true) : NextFTCOpMode() {
                     Fries.intakeRight
                 ).schedule()
             }
-        Gamepads.gamepad2.cross
-//        Gamepads.gamepad2.cross.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
+        Gamepads.gamepad2.cross.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenTrue {
                 ParallelGroup(
                     Intake.off,
@@ -84,6 +81,64 @@ abstract class NextBaseTele(val botCentric: Boolean = true) : NextFTCOpMode() {
             }
 
         // DELETE ME
+        Gamepads.gamepad1.square
+            .whenTrue {
+                SequentialGroup(
+                    Fries.fireLeft,
+                    Delay(0.2.seconds),
+                    Fries.intakeLeft
+                ).schedule()
+            }
+        Gamepads.gamepad1.triangle
+            .whenTrue {
+                SequentialGroup(
+                    Fries.fireCenter,
+                    Delay(0.2.seconds),
+                    Fries.intakeCenter
+                ).schedule()
+            }
+        Gamepads.gamepad1.circle
+            .whenTrue {
+                SequentialGroup(
+                    Fries.fireRight,
+                    Delay(0.2.seconds),
+                    Fries.intakeRight
+                ).schedule()
+            }
+        Gamepads.gamepad1.cross
+            .whenTrue {
+                ParallelGroup(
+                    SequentialGroup(
+                        Fries.fireLeft,
+                        Delay(0.2.seconds),
+                        Fries.intakeLeft,
+                        Fries.fireCenter,
+                        Delay(0.2.seconds),
+                        Fries.intakeCenter,
+                        Fries.fireRight,
+                        Delay(0.2.seconds),
+                        Fries.intakeRight
+                    )
+                ).schedule()
+            }
+        Gamepads.gamepad1.dpadUp
+            .whenTrue {
+                if (runtime - lastAdjustTime >= 0.1) {
+                    Flywheel.velocity += 50
+                    lastAdjustTime = runtime
+                }
+            }
+        Gamepads.gamepad1.dpadDown
+            .whenTrue {
+                if (runtime - lastAdjustTime >= 0.1) {
+                    Flywheel.velocity -= 50
+                    lastAdjustTime = runtime
+                }
+            }
+        Gamepads.gamepad1.dpadLeft
+            .whenTrue { Flywheel.close.schedule() }
+        Gamepads.gamepad1.dpadRight
+            .whenTrue { Flywheel.off.schedule() }
         Gamepads.gamepad2.dpadLeft
             .whenTrue { Hood.open.schedule() }
         Gamepads.gamepad2.dpadRight

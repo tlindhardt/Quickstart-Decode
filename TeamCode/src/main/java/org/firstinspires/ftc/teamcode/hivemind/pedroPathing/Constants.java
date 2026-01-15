@@ -12,8 +12,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Constants {
-    // 18.3lbs -> 8.3 (was 5 when we started)
-    public static FollowerConstants followerConstants = new FollowerConstants().mass(14.60567);
+    public static FollowerConstants followerConstants = new FollowerConstants()
+            .forwardZeroPowerAcceleration(-33.88364927968308)
+            .lateralZeroPowerAcceleration(-84.75258070627615)
+            .mass(14.60567);
 
     public static PathConstraints pathConstraints = new PathConstraints(0.99, 100, 1, 1);
 
@@ -27,6 +29,8 @@ public class Constants {
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .xVelocity(78.8591438353531)
+            .yVelocity(55.0762939453125)
             .useBrakeModeInTeleOp(true);
 
     public static PinpointConstants localizerConstants = new PinpointConstants()

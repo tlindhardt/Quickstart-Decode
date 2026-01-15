@@ -4,7 +4,10 @@ import com.pedropathing.geometry.BezierLine
 import com.pedropathing.geometry.Pose
 import com.pedropathing.paths.PathChain
 import dev.nextftc.core.commands.delays.Delay
+import dev.nextftc.core.commands.groups.ParallelGroup
 import dev.nextftc.core.commands.groups.SequentialGroup
+import dev.nextftc.core.commands.utility.InstantCommand
+import dev.nextftc.core.components.BindingsComponent
 import dev.nextftc.core.components.SubsystemComponent
 import dev.nextftc.extensions.pedro.FollowPath
 import dev.nextftc.extensions.pedro.PedroComponent
@@ -27,7 +30,8 @@ abstract class NextBaseAuto : NextFTCOpMode() {
         addComponents(
             PedroComponent(Constants::createFollower),
             SubsystemComponent(Flywheel, Fries, Hood, Intake),
-            BulkReadComponent
+            BulkReadComponent,
+            BindingsComponent
         )
     }
 
@@ -36,22 +40,36 @@ abstract class NextBaseAuto : NextFTCOpMode() {
 
     override fun onStartButtonPressed() {
         SequentialGroup(
-            // Setup
+
+            // Start Delay
             Delay(1.seconds),
+
             Fries.intakeAll,
             Intake.forward,
-            Flywheel.on,
+            Flywheel.close,
+            Delay(1.seconds),
+
+            // Drive
             FollowPath(shootPath),
 
             // Shoot
             Intake.off,
-            Fries.fireAll,
-            Flywheel.off,
+            SequentialGroup(
+                Fries.fireLeft,
+                Delay(0.2.seconds),
+                Fries.intakeLeft,
+                Fries.fireCenter,
+                Delay(0.2.seconds),
+                Fries.intakeCenter,
+                Fries.fireRight,
+                Delay(0.2.seconds),
+                Fries.intakeRight
+            ),
 
-            // Drive to park location
+            // End
             FollowPath(endPath),
-            Fries.intakeAll,
-        )()
+            Flywheel.off,
+        ).schedule()
     }
 
     override fun onInit() {

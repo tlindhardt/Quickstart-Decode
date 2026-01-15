@@ -8,9 +8,9 @@ import dev.nextftc.hardware.positionable.SetPositions
 object Fries : Subsystem {
 
     enum class FryConfig(val fire: Double, val intake: Double) {
-        LEFT(0.20, 0.035),
-        CENTER(0.80, 0.97),
-        RIGHT(0.82, 0.993),
+        LEFT(0.22, 0.035),
+        CENTER(0.78, 0.97),
+        RIGHT(0.80, 1.0),
     }
 
     private val leftFry = ServoEx("left_fry")

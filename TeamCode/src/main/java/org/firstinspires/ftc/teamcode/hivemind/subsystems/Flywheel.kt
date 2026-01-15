@@ -6,16 +6,17 @@ import dev.nextftc.control.KineticState
 import dev.nextftc.control.builder.controlSystem
 import dev.nextftc.control.feedback.PIDCoefficients
 import dev.nextftc.control.feedforward.BasicFeedforwardParameters
+import dev.nextftc.core.commands.utility.InstantCommand
 import dev.nextftc.core.subsystems.Subsystem
+import dev.nextftc.ftc.ActiveOpMode.telemetry
 import dev.nextftc.hardware.controllable.MotorGroup
-import dev.nextftc.hardware.controllable.RunToVelocity
 import dev.nextftc.hardware.impl.MotorEx
 
 
 @Configurable
 object Flywheel : Subsystem {
     private const val OFF = 0.0
-    private const val ON = 1000.0
+    private const val CLOSE = 1050.0
 
     @JvmField
     var velPidCoefficients = PIDCoefficients(0.007, 0.0, 0.0)  // P, I, D for velocity PID
@@ -28,8 +29,6 @@ object Flywheel : Subsystem {
         MotorEx("flywheel_right")
     )
 
-//    var flywheel = MotorEx("flywheel_left")
-
     private val controller: ControlSystem = controlSystem {
         velPid(velPidCoefficients)
         basicFF(basicFFCoefficients)
@@ -37,17 +36,27 @@ object Flywheel : Subsystem {
 
     var velocity: Double = 0.0
         set(value) {
-            controller.goal = KineticState(0.0, value, 0.0)
+            field = value.coerceIn(0.0, 1800.0)
+            setTargetVelocity(field)
         }
 
-    val off = RunToVelocity(controller, OFF).requires(this)
-    val on = RunToVelocity(controller, ON).requires(this)
+    val off = InstantCommand { setTargetVelocity(OFF) }
+
+    val close = InstantCommand { setTargetVelocity(CLOSE) }
+
+//    val off = RunToVelocity(controller, OFF).requires(this)
+//    val close = RunToVelocity(controller, CLOSE).requires(this)
 
     override fun periodic() {
         flywheel.power = controller.calculate(flywheel.state)
+        telemetry.addData("Velocity", flywheel.velocity)
     }
 
     override fun initialize() {
         flywheel.power = OFF
+    }
+
+    fun setTargetVelocity(targetVelocity: Double) {
+        controller.goal = KineticState(0.0, targetVelocity, 0.0)
     }
 }
