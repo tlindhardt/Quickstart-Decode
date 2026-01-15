@@ -33,17 +33,18 @@ abstract class NextBaseTele(val botCentric: Boolean = true) : NextFTCOpMode() {
     override fun onStartButtonPressed() {
         // DRIVER CONTROLS
         Gamepads.gamepad1.rightTrigger.greaterThan(.3)
-            .whenTrue { Intake.forward.schedule() }
-            .whenFalse { Intake.off.schedule() }
+            .whenBecomesTrue { Intake.forward.schedule() }
+            .whenBecomesFalse { Intake.off.schedule() }
         Gamepads.gamepad1.leftTrigger.greaterThan(.3)
-            .whenTrue { Intake.reverse.schedule() }
-            .whenFalse { Intake.off.schedule() }
+            .whenBecomesTrue { Intake.reverse.schedule() }
+            .whenBecomesFalse { Intake.off.schedule() }
 
         // SHOOTER CONTROLS
         Gamepads.gamepad2.rightTrigger.greaterThan(.3)
             .whenTrue { Flywheel.on.schedule() }
             .whenFalse { Flywheel.off.schedule() }
-        Gamepads.gamepad2.square.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
+        Gamepads.gamepad2.square
+//        Gamepads.gamepad2.square.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenTrue {
                 SequentialGroup(
                     Fries.fireLeft,
@@ -51,24 +52,27 @@ abstract class NextBaseTele(val botCentric: Boolean = true) : NextFTCOpMode() {
                     Fries.intakeLeft
                 ).schedule()
             }
-        Gamepads.gamepad2.triangle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
-            .whenTrue(
+        Gamepads.gamepad2.triangle
+//        Gamepads.gamepad2.triangle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
+            .whenTrue {
                 SequentialGroup(
                     Fries.fireCenter,
                     Delay(0.2.seconds),
                     Fries.intakeCenter
-                )
-            )
-        Gamepads.gamepad2.circle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
-            .whenTrue(
+                ).schedule()
+            }
+        Gamepads.gamepad2.circle
+//        Gamepads.gamepad2.circle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
+            .whenTrue {
                 SequentialGroup(
                     Fries.fireRight,
                     Delay(0.2.seconds),
                     Fries.intakeRight
-                )
-            )
-        Gamepads.gamepad2.cross.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
-            .whenTrue(
+                ).schedule()
+            }
+        Gamepads.gamepad2.cross
+//        Gamepads.gamepad2.cross.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
+            .whenTrue {
                 ParallelGroup(
                     Intake.off,
                     SequentialGroup(
@@ -76,18 +80,18 @@ abstract class NextBaseTele(val botCentric: Boolean = true) : NextFTCOpMode() {
                         Delay(0.2.seconds),
                         Fries.intakeAll
                     )
-                )
-            )
+                ).schedule()
+            }
 
         // DELETE ME
         Gamepads.gamepad2.dpadLeft
-            .whenTrue(Hood.open)
+            .whenTrue { Hood.open.schedule() }
         Gamepads.gamepad2.dpadRight
-            .whenTrue(Hood.close)
+            .whenTrue { Hood.close.schedule() }
         Gamepads.gamepad2.leftBumper
-            .whenTrue(Intake.forward)
+            .whenTrue { Intake.forward.schedule() }
         Gamepads.gamepad2.rightBumper
-            .whenTrue(Intake.off)
+            .whenTrue { Intake.off.schedule() }
     }
 
     override fun onInit() {

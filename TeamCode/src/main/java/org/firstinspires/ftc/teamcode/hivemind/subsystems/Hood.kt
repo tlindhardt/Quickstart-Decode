@@ -6,7 +6,7 @@ import dev.nextftc.hardware.positionable.SetPosition
 
 object Hood : Subsystem {
     private const val OPEN = 0.75
-    private const val CLOSE = 0.87
+    private const val CLOSE = 0.75
     private val hood = ServoEx("hood")
 
     val open = SetPosition(hood, OPEN).requires(this)
