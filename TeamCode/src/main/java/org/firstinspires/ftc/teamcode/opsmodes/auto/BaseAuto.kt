@@ -98,7 +98,7 @@ abstract class BaseAuto : LinearOpMode() {
                     return
                 } else {
                     shootTimer.reset()
-                    shooter.power = Utils.getShootingPower(voltageSensor)
+                    shooter.velocity = 1350.0
                     pathState = PathState.REV_SHOOT
                 }
             }
