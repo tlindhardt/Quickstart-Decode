@@ -4,9 +4,7 @@ import com.pedropathing.geometry.BezierLine
 import com.pedropathing.geometry.Pose
 import com.pedropathing.paths.PathChain
 import dev.nextftc.core.commands.delays.Delay
-import dev.nextftc.core.commands.groups.ParallelGroup
 import dev.nextftc.core.commands.groups.SequentialGroup
-import dev.nextftc.core.commands.utility.InstantCommand
 import dev.nextftc.core.components.BindingsComponent
 import dev.nextftc.core.components.SubsystemComponent
 import dev.nextftc.extensions.pedro.FollowPath
@@ -18,7 +16,6 @@ import dev.nextftc.ftc.components.BulkReadComponent
 import org.firstinspires.ftc.teamcode.hivemind.pedroPathing.Constants
 import org.firstinspires.ftc.teamcode.hivemind.subsystems.Flywheel
 import org.firstinspires.ftc.teamcode.hivemind.subsystems.Fries
-import org.firstinspires.ftc.teamcode.hivemind.subsystems.Hood
 import org.firstinspires.ftc.teamcode.hivemind.subsystems.Intake
 import kotlin.time.Duration.Companion.seconds
 
@@ -29,7 +26,7 @@ abstract class NextBaseAuto : NextFTCOpMode() {
     init {
         addComponents(
             PedroComponent(Constants::createFollower),
-            SubsystemComponent(Flywheel, Fries, Hood, Intake),
+            SubsystemComponent(Flywheel, Fries, Intake),
             BulkReadComponent,
             BindingsComponent
         )
