@@ -6,8 +6,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.*
 import com.qualcomm.robotcore.util.ElapsedTime
 import org.firstinspires.ftc.teamcode.opsmodes.pedroPathing.Constants
+import kotlin.math.atan2
 
 open class BaseTele(val botCentric: Boolean = true) : LinearOpMode() {
+
+    // Measured using Fusion, where 0,0 is red loading zone
+    enum class Depot(val x: Double, val y: Double, val heading: Double) {
+        RED(126.0, 129.0, 34.0),
+        BLUE(15.0, 129.0, 146.0)
+    }
 
     var isShooting: Boolean = false
     lateinit var follower: Follower
@@ -35,13 +42,27 @@ open class BaseTele(val botCentric: Boolean = true) : LinearOpMode() {
         waitForStart()
         feeder.position = 1.0
         follower.startTeleopDrive();
-
         while (opModeIsActive()) {
+            val blueHeading = calculateHeading(follower.pose, Depot.BLUE)
+            val redHeading = calculateHeading(follower.pose, Depot.RED)
+            telemetry.addData("currentHeading", follower.heading)
+            telemetry.addData("blueHeading", blueHeading)
+            telemetry.addData("redHeading", redHeading)
+
+            var turn = -gamepad1.right_stick_x.toDouble()
+            if (gamepad1.cross) {
+                follower.heading = blueHeading
+                turn = 0.0
+            } else if (gamepad1.square) {
+                follower.heading = redHeading
+                turn = 0.0
+            }
+
             follower.update()
             follower.setTeleOpDrive(
                 -gamepad1.left_stick_y.toDouble(),
                 -gamepad1.left_stick_x.toDouble(),
-                -gamepad1.right_stick_x.toDouble(),
+                turn,
                 botCentric
             )
             doShooting()
@@ -49,6 +70,12 @@ open class BaseTele(val botCentric: Boolean = true) : LinearOpMode() {
             telemetry.addData("Shoot Power", shooter.power)
             telemetry.update()
         }
+    }
+
+    private fun calculateHeading(pose: Pose, depot: Depot): Double {
+        val dx = depot.x - pose.x
+        val dy = depot.y - pose.y
+        return atan2(dy, dx)
     }
 
     private fun doShooting() {
