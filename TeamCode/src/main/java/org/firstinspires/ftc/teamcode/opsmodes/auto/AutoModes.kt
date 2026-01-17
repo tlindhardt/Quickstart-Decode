@@ -3,6 +3,17 @@ package org.firstinspires.ftc.teamcode.opsmodes.auto
 import com.pedropathing.geometry.Pose
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 
+@Autonomous(name = "MouseSpit")
+open class MouseSpit : BaseAuto() {
+    override fun buildPathList(): List<Pose> {
+        return listOf(
+            Pose(0.0, 0.0),
+            Pose(5.0, 0.0),
+            Pose( 5.0, 0.0)
+        )
+    }
+}
+
 @Autonomous(name = "Hivemind - Blue Bottom")
 open class BlueBottomHivemindAuto : BaseAuto() {
     override fun buildPathList(): List<Pose> {

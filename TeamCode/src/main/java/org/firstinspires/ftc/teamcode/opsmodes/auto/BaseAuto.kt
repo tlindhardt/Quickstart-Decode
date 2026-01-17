@@ -22,7 +22,7 @@ abstract class BaseAuto : LinearOpMode() {
     // Do not delay more than 15 seconds
     val AUTO_WAIT_TIME = 0.0
     val REV_WAIT_TIME = 2.0
-    val SHOOT_DELAY_TIME = 3.0
+    val SHOOT_DELAY_TIME = 1.0
     var pathState = PathState.WAIT
     var shotNumber = 0
     lateinit var follower: Follower
@@ -131,7 +131,7 @@ abstract class BaseAuto : LinearOpMode() {
                         shotNumber++
                     }
                 } else {
-                    if (shootTimer.time() > 9.0) {
+                    if (shootTimer.time() > 4.0) {
                         pathState = PathState.DRIVE_TO_END
                     }
                 }
