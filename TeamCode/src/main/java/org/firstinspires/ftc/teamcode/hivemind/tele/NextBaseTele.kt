@@ -41,7 +41,7 @@ abstract class NextBaseTele(val botCentric: Boolean = true) : NextFTCOpMode() {
 
         // SHOOTER CONTROLS
         Gamepads.gamepad2.rightTrigger.greaterThan(.3)
-            .whenTrue { Flywheel.close.schedule() }
+            .whenTrue { Flywheel.top.schedule() }
             .whenFalse { Flywheel.off.schedule() }
 //        Gamepads.gamepad2.square.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
 //            .whenTrue {

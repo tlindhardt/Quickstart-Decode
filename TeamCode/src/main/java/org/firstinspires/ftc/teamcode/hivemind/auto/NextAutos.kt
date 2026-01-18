@@ -1,50 +1,35 @@
 package org.firstinspires.ftc.teamcode.hivemind.auto
 
-import com.pedropathing.geometry.Pose
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 
-@Autonomous(name = "Next Hivemind - Blue Bottom")
-open class NextBlueBottomHivemindAuto : NextBaseAuto() {
-    override fun buildPathList(): List<Pose> {
-        return listOf(
-            Pose(0.0, 0.0),
-            Pose(90.0, 0.0, Math.toRadians(50.0)),
-            Pose(120.0, 0.0, Math.toRadians(90.0))
-        )
-    }
-}
+@Autonomous(name = "Blue Bottom")
+open class BlueBottom : NextBaseAuto(
+    PathsBuilder.build(
+        isBlue = true,
+        isTop = false
+    )
+)
 
-@Autonomous(name = "Next Hivemind - Red Bottom")
-class NextRedBottomHivemindAuto : NextBlueBottomHivemindAuto() {
-    override fun buildPathList(): List<Pose> {
-        val pathList = super.buildPathList()
-        return listOf(
-            pathList[0].mirror(),
-            pathList[1].mirror(),
-            pathList[2].mirror(),
-        )
-    }
-}
+@Autonomous(name = "Red Bottom")
+open class RedBottom : NextBaseAuto(
+    PathsBuilder.build(
+        isBlue = false,
+        isTop = false
+    )
+)
 
-@Autonomous(name = "Next Hivemind - Blue Top")
-open class NextBlueTopHivemindAuto : NextBaseAuto() {
-    override fun buildPathList(): List<Pose> {
-        return listOf(
-            Pose(0.0, 0.0),
-            Pose(38.0, 0.0, Math.toRadians(185.0)),
-            Pose(24.0, 24.0, Math.toRadians(-135.0))
-        )
-    }
-}
+@Autonomous(name = "Blue Top")
+open class BlueTop : NextBaseAuto(
+    PathsBuilder.build(
+        isBlue = true,
+        isTop = true
+    )
+)
 
-@Autonomous(name = "Next Hivemind - Red Top")
-class NextRedTopHivemindAuto : NextBlueTopHivemindAuto() {
-    override fun buildPathList(): List<Pose> {
-        val pathList = super.buildPathList()
-        return listOf(
-            pathList[0],
-            Pose(pathList[1].x, pathList[1].y, -pathList[1].heading),
-            Pose(pathList[2].x, -pathList[2].y, -pathList[2].heading),
-        )
-    }
-}
+@Autonomous(name = "Red Top")
+open class RedTop : NextBaseAuto(
+    PathsBuilder.build(
+        isBlue = false,
+        isTop = true
+    )
+)

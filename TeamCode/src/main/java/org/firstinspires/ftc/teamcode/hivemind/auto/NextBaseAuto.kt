@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.hivemind.auto
 
-import com.pedropathing.geometry.BezierLine
-import com.pedropathing.geometry.Pose
 import com.pedropathing.paths.PathChain
+import dev.nextftc.core.commands.Command
 import dev.nextftc.core.commands.delays.Delay
 import dev.nextftc.core.commands.groups.SequentialGroup
 import dev.nextftc.core.components.BindingsComponent
@@ -17,11 +16,10 @@ import org.firstinspires.ftc.teamcode.hivemind.pedroPathing.Constants
 import org.firstinspires.ftc.teamcode.hivemind.subsystems.Flywheel
 import org.firstinspires.ftc.teamcode.hivemind.subsystems.Fries
 import org.firstinspires.ftc.teamcode.hivemind.subsystems.Intake
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
-abstract class NextBaseAuto : NextFTCOpMode() {
-    lateinit var shootPath: PathChain
-    lateinit var endPath: PathChain
+abstract class NextBaseAuto(val paths: Paths) : NextFTCOpMode() {
 
     init {
         addComponents(
@@ -32,45 +30,36 @@ abstract class NextBaseAuto : NextFTCOpMode() {
         )
     }
 
-    abstract fun buildPathList(): List<Pose>
-
-
     override fun onStartButtonPressed() {
         SequentialGroup(
-
             // Start Delay
-            Delay(1.seconds),
+            Delay(100.milliseconds),
 
-            Fries.intakeAll,
-            Intake.forward,
-            Flywheel.close,
-            Delay(1.seconds),
+            // Shoot Preload
+            driveAndShoot(paths.initialShootPath),
 
-            // Drive
-            FollowPath(shootPath),
+            // Shoot Top Spike
+            driveAndLoad(paths.topSpike),
+            driveAndShoot(paths.topSpikeShootPath),
 
-            // Shoot
-            Intake.off,
-            SequentialGroup(
-                Fries.fireLeft,
-                Delay(0.2.seconds),
-                Fries.intakeLeft,
-                Fries.fireCenter,
-                Delay(0.2.seconds),
-                Fries.intakeCenter,
-                Fries.fireRight,
-                Delay(0.2.seconds),
-                Fries.intakeRight
-            ),
+            // Shoot Center Spike
+            driveAndLoad(paths.centerSpike),
+            driveAndShoot(paths.centerSpikeShootPath),
 
-            // End
-            FollowPath(endPath),
-            Flywheel.off,
+            // Shoot Bottom Spike
+            driveAndLoad(paths.bottomSpike),
+            driveAndShoot(paths.bottomSpikeShootPath),
+
+            //Shoot Load
+            driveAndLoad(paths.load),
+            driveAndShoot(paths.loadShootPath),
+
+            FollowPath(paths.centerSpike.first),
         ).schedule()
     }
 
     override fun onInit() {
-        buildPath()
+        follower.setStartingPose(paths.startPose)
     }
 
     override fun onUpdate() {
@@ -81,24 +70,27 @@ abstract class NextBaseAuto : NextFTCOpMode() {
         ActiveOpMode.telemetry.update()
     }
 
-    private fun buildPath() {
-        val pathList = buildPathList();
-        val startingPose = pathList[0]
-        val shootingPose = pathList[1]
-        val endPose = pathList[2]
+    val driveAndShoot: (PathChain) -> Command = {
+        SequentialGroup(
+            Flywheel.top,
+            FollowPath(it),
+            Fries.fireLeft,
+            Delay(0.2.seconds),
+            Fries.fireCenter,
+            Delay(0.2.seconds),
+            Fries.fireRight,
+            Delay(0.2.seconds),
+            Flywheel.off,
+            Fries.intakeAll
+        )
+    }
 
-        follower.setStartingPose(startingPose)
-
-        shootPath = follower.pathBuilder()
-            .setGlobalDeceleration()
-            .addPath(BezierLine(startingPose, shootingPose))
-            .setLinearHeadingInterpolation(startingPose.heading, shootingPose.heading)
-            .build()
-
-        endPath = follower.pathBuilder()
-            .setGlobalDeceleration()
-            .addPath(BezierLine(shootingPose, endPose))
-            .setLinearHeadingInterpolation(shootingPose.heading, endPose.heading)
-            .build()
+    val driveAndLoad: (Pair<PathChain, PathChain>) -> Command = {
+        SequentialGroup(
+            FollowPath(it.first),
+            Intake.forward,
+            FollowPath(it.second),
+            Intake.off,
+        )
     }
 }
