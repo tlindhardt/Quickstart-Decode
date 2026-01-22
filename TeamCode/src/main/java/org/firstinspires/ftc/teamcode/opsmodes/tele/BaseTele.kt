@@ -5,6 +5,7 @@ import com.pedropathing.geometry.Pose
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.*
 import com.qualcomm.robotcore.util.ElapsedTime
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit
 import org.firstinspires.ftc.teamcode.opsmodes.pedroPathing.Constants
 import kotlin.math.atan2
 
@@ -12,8 +13,8 @@ open class BaseTele(val botCentric: Boolean = true) : LinearOpMode() {
 
     // Measured using Fusion, where 0,0 is red loading zone
     enum class Depot(val x: Double, val y: Double, val heading: Double) {
-        RED(126.0, 129.0, 34.0),
-        BLUE(15.0, 129.0, 146.0)
+        RED(144.0, 144.0, 34.0),
+        BLUE(0.0, 144.0, 146.0)
     }
 
     var isShooting: Boolean = false
@@ -34,7 +35,7 @@ open class BaseTele(val botCentric: Boolean = true) : LinearOpMode() {
             PIDFCoefficients(200.0, 0.0, 20.0, 14.5 * 12 / voltageSensor.voltage)
         )
         follower = Constants.createFollower(hardwareMap)
-        follower.setStartingPose(Pose())
+        follower.setStartingPose(Pose(7.0, 7.0, 0.0))
         follower.update()
         shootTimer = ElapsedTime()
         isShooting = false
@@ -43,19 +44,13 @@ open class BaseTele(val botCentric: Boolean = true) : LinearOpMode() {
         feeder.position = 1.0
         follower.startTeleopDrive();
         while (opModeIsActive()) {
-            val blueHeading = calculateHeading(follower.pose, Depot.BLUE)
-            val redHeading = calculateHeading(follower.pose, Depot.RED)
-            telemetry.addData("currentHeading", follower.heading)
-            telemetry.addData("blueHeading", blueHeading)
-            telemetry.addData("redHeading", redHeading)
-
             var turn = -gamepad1.right_stick_x.toDouble()
             if (gamepad1.cross) {
-                follower.heading = blueHeading
-                turn = 0.0
+                val blueHeading = calculateHeading(follower.pose, Depot.BLUE)
+                turn = AngleUnit.normalizeRadians(blueHeading - follower.heading).coerceIn(-1.0, 1.0)
             } else if (gamepad1.square) {
-                follower.heading = redHeading
-                turn = 0.0
+                val redHeading = calculateHeading(follower.pose, Depot.RED)
+                turn = AngleUnit.normalizeRadians(redHeading - follower.heading).coerceIn(-1.0, 1.0)
             }
 
             follower.update()
@@ -73,6 +68,8 @@ open class BaseTele(val botCentric: Boolean = true) : LinearOpMode() {
     }
 
     private fun calculateHeading(pose: Pose, depot: Depot): Double {
+        telemetry.addData("currentX", pose.x)
+        telemetry.addData("currentY", pose.y)
         val dx = depot.x - pose.x
         val dy = depot.y - pose.y
         return atan2(dy, dx)
