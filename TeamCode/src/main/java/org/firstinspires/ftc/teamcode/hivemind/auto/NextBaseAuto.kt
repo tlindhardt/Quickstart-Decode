@@ -13,18 +13,17 @@ import dev.nextftc.ftc.ActiveOpMode
 import dev.nextftc.ftc.NextFTCOpMode
 import dev.nextftc.ftc.components.BulkReadComponent
 import org.firstinspires.ftc.teamcode.hivemind.pedroPathing.Constants
-import org.firstinspires.ftc.teamcode.hivemind.subsystems.Flywheel
-import org.firstinspires.ftc.teamcode.hivemind.subsystems.Fries
-import org.firstinspires.ftc.teamcode.hivemind.subsystems.Intake
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
-abstract class NextBaseAuto(val paths: Paths) : NextFTCOpMode() {
+abstract class NextBaseAuto(val isBlue: Boolean, val isTop: Boolean) : NextFTCOpMode() {
+
+    lateinit var paths: Paths
 
     init {
         addComponents(
             PedroComponent(Constants::createFollower),
-            SubsystemComponent(Flywheel, Fries, Intake),
+            SubsystemComponent(),
             BulkReadComponent,
             BindingsComponent
         )
@@ -59,10 +58,13 @@ abstract class NextBaseAuto(val paths: Paths) : NextFTCOpMode() {
     }
 
     override fun onInit() {
+        paths = PathsBuilder.build(isBlue, isTop, follower)
         follower.setStartingPose(paths.startPose)
     }
 
     override fun onUpdate() {
+        ActiveOpMode.telemetry.addData("x", follower.pose.x)
+        ActiveOpMode.telemetry.addData("y", follower.pose.y)
         ActiveOpMode.telemetry.update()
     }
 
@@ -72,25 +74,25 @@ abstract class NextBaseAuto(val paths: Paths) : NextFTCOpMode() {
 
     val driveAndShoot: (PathChain) -> Command = {
         SequentialGroup(
-            Flywheel.top,
+//            Flywheel.top,
             FollowPath(it),
-            Fries.fireLeft,
+//            Fries.fireLeft,
             Delay(0.2.seconds),
-            Fries.fireCenter,
+//            Fries.fireCenter,
             Delay(0.2.seconds),
-            Fries.fireRight,
+//            Fries.fireRight,
             Delay(0.2.seconds),
-            Flywheel.off,
-            Fries.intakeAll
+//            Flywheel.off,
+//            Fries.intakeAll
         )
     }
 
     val driveAndLoad: (Pair<PathChain, PathChain>) -> Command = {
         SequentialGroup(
             FollowPath(it.first),
-            Intake.forward,
+//            Intake.forward,
             FollowPath(it.second),
-            Intake.off,
+//            Intake.off,
         )
     }
 }

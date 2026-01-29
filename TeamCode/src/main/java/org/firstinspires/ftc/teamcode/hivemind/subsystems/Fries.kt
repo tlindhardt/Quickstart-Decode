@@ -7,10 +7,10 @@ import dev.nextftc.hardware.positionable.SetPositions
 
 object Fries : Subsystem {
 
-    enum class FryConfig(val fire: Double, val intake: Double) {
-        LEFT(0.22, 0.035),
-        CENTER(0.78, 0.97),
-        RIGHT(0.80, 1.0),
+    enum class FryConfig(val fire: Double, val intake: Double, val hold: Double) {
+        LEFT(0.22, 0.035, 0.15),
+        CENTER(0.78, 0.97, 0.84),
+        RIGHT(0.80, 1.0, 0.84),
     }
 
     private val leftFry = ServoEx("left_fry")
@@ -29,10 +29,17 @@ object Fries : Subsystem {
         centerFry to FryConfig.CENTER.fire,
         rightFry to FryConfig.RIGHT.fire
     ).requires(this)
+
     val intakeAll = SetPositions(
         leftFry to FryConfig.LEFT.intake,
         centerFry to FryConfig.CENTER.intake,
         rightFry to FryConfig.RIGHT.intake
+    ).requires(this)
+
+    val holdAll = SetPositions(
+        leftFry to FryConfig.LEFT.hold,
+        centerFry to FryConfig.CENTER.hold,
+        rightFry to FryConfig.RIGHT.hold
     ).requires(this)
 
     override fun initialize() {

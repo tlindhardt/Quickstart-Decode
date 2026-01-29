@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.hivemind.auto
 
+import com.pedropathing.follower.Follower
 import com.pedropathing.geometry.BezierLine
 import com.pedropathing.geometry.Pose
 import com.pedropathing.paths.PathChain
-import org.firstinspires.ftc.teamcode.hivemind.pedroPathing.Tuning.follower
 
 class PathsBuilder {
 
@@ -20,48 +20,48 @@ class PathsBuilder {
         val loadStartPose = Pose(15.0, 9.0, Math.toRadians(180.0))
         val loadEndPose = Pose(8.0, 9.0, Math.toRadians(180.0))
 
-        fun build(isBlue: Boolean, isTop: Boolean): Paths {
+        fun build(isBlue: Boolean, isTop: Boolean, follower: Follower): Paths {
             val startPose = if (isTop) topStartPose else bottomStartPose
             return Paths(
                 startPose,
-                buildPath(startPose, shootPose, isBlue),
+                buildPath(startPose, shootPose, isBlue, follower),
 
                 // Top Spike
                 Pair(
-                    buildPath(shootPose, topSpikeStartPose, isBlue),
-                    buildPath(topSpikeStartPose, topSpikeEndPose, isBlue)
+                    buildPath(shootPose, topSpikeStartPose, isBlue, follower),
+                    buildPath(topSpikeStartPose, topSpikeEndPose, isBlue, follower)
                 ),
-                buildPath(topSpikeEndPose, shootPose, isBlue),
+                buildPath(topSpikeEndPose, shootPose, isBlue, follower),
 
                 // Center Spike
                 Pair(
-                    buildPath(shootPose, centerSpikeStartPose, isBlue),
-                    buildPath(centerSpikeStartPose, centerSpikeEndPose, isBlue),
+                    buildPath(shootPose, centerSpikeStartPose, isBlue, follower),
+                    buildPath(centerSpikeStartPose, centerSpikeEndPose, isBlue, follower),
                 ),
-                buildPath(centerSpikeEndPose, shootPose, isBlue),
+                buildPath(centerSpikeEndPose, shootPose, isBlue, follower),
 
                 // Bottom Spike
                 Pair(
-                    buildPath(shootPose, bottomSpikeStartPose, isBlue),
-                    buildPath(bottomSpikeStartPose, bottomSpikeEndPose, isBlue),
+                    buildPath(shootPose, bottomSpikeStartPose, isBlue, follower),
+                    buildPath(bottomSpikeStartPose, bottomSpikeEndPose, isBlue, follower),
                 ),
-                buildPath(bottomSpikeEndPose, shootPose, isBlue),
+                buildPath(bottomSpikeEndPose, shootPose, isBlue, follower),
 
                 // Load Zone
                 Pair(
-                    buildPath(shootPose, loadStartPose, isBlue),
-                    buildPath(loadStartPose, loadEndPose, isBlue),
+                    buildPath(shootPose, loadStartPose, isBlue, follower),
+                    buildPath(loadStartPose, loadEndPose, isBlue, follower),
                 ),
-                buildPath(loadEndPose, shootPose, isBlue),
+                buildPath(loadEndPose, shootPose, isBlue, follower),
             )
         }
 
-        private fun buildPath(startPose: Pose, endPose: Pose, isBlue: Boolean): PathChain {
-            val startPose = if (isBlue) startPose else startPose.mirror()
-            val endPose = if (isBlue) endPose else endPose.mirror()
+        private fun buildPath(startPose: Pose, endPose: Pose, isBlue: Boolean, follower: Follower): PathChain {
+            val newStartPose = if (isBlue) startPose else startPose.mirror()
+            val newEndPose = if (isBlue) endPose else endPose.mirror()
             return follower.pathBuilder()
-                .addPath(BezierLine(startPose, endPose))
-                .setLinearHeadingInterpolation(startPose.heading, endPose.heading)
+                .addPath(BezierLine(newStartPose, newEndPose))
+                .setLinearHeadingInterpolation(newStartPose.heading, newEndPose.heading)
                 .build()
         }
     }
