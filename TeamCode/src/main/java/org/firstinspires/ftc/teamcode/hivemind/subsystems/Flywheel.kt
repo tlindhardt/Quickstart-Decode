@@ -44,9 +44,6 @@ object Flywheel : Subsystem {
 
     val top = InstantCommand { setTargetVelocity(TOP) }
 
-//    val off = RunToVelocity(controller, OFF).requires(this)
-//    val close = RunToVelocity(controller, CLOSE).requires(this)
-
     override fun periodic() {
         flywheel.power = controller.calculate(flywheel.state)
         telemetry.addData("Velocity", flywheel.velocity)

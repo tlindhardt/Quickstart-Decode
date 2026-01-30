@@ -11,16 +11,15 @@ class AutoShootPedroDriverControlled @JvmOverloads constructor(
     drivePower: Supplier<Double>,
     strafePower: Supplier<Double>,
     turnPower: Supplier<Double>,
+    private val autoTracking: Supplier<Boolean>,
     private val robotCentric: Boolean,
     val isBlue: Boolean
 ) : DriverControlledCommand(drivePower, strafePower, turnPower) {
 
-    enum class Depot(val x: Double, val y: Double, val heading: Double) {
-        RED(144.0, 138.0, 34.0),
-        BLUE(0.0, 138.0, 146.0)
+    enum class Depot(val x: Double, val y: Double) {
+        RED(144.0, 140.0),
+        BLUE(0.0, 140.0)
     }
-
-    var isAutoTracking: Boolean = false
 
     override fun start() {
         follower.startTeleopDrive()
@@ -29,7 +28,7 @@ class AutoShootPedroDriverControlled @JvmOverloads constructor(
     override fun calculateAndSetPowers(powers: DoubleArray) {
         var (drive, strafe, turn) = powers
 
-        if (isAutoTracking) {
+        if (autoTracking.get()) {
             if (isBlue) {
                 val blueHeading = calculateHeading(follower.pose, Depot.BLUE)
                 turn = AngleUnit.normalizeRadians(blueHeading - follower.heading).coerceIn(-1.0, 1.0)

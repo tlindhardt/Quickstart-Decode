@@ -12,10 +12,7 @@ import dev.nextftc.ftc.Gamepads
 import dev.nextftc.ftc.NextFTCOpMode
 import dev.nextftc.ftc.components.BulkReadComponent
 import org.firstinspires.ftc.teamcode.hivemind.pedroPathing.Constants
-import org.firstinspires.ftc.teamcode.hivemind.subsystems.AutoShootPedroDriverControlled
-import org.firstinspires.ftc.teamcode.hivemind.subsystems.Flywheel
-import org.firstinspires.ftc.teamcode.hivemind.subsystems.Fries
-import org.firstinspires.ftc.teamcode.hivemind.subsystems.Intake
+import org.firstinspires.ftc.teamcode.hivemind.subsystems.*
 import kotlin.time.Duration.Companion.seconds
 
 abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
@@ -25,22 +22,13 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
     init {
         addComponents(
             PedroComponent(Constants::createFollower),
-            SubsystemComponent(Flywheel, Fries, Intake),
+            SubsystemComponent(Flywheel, Fries, Intake, Lights, ColorSensors),
             BulkReadComponent,
             BindingsComponent
         )
     }
 
     override fun onStartButtonPressed() {
-        // DRIVER CONTROLS
-        Gamepads.gamepad1.cross
-            .whenBecomesTrue {
-                driverControlled.isAutoTracking = true
-            }
-            .whenBecomesFalse {
-                driverControlled.isAutoTracking = false
-            }
-
         // SHOOTER CONTROLS
         Gamepads.gamepad2.rightBumper
             .whenBecomesTrue { Intake.forward.schedule() }
@@ -51,30 +39,6 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
         Gamepads.gamepad2.rightTrigger.greaterThan(.3)
             .whenTrue { Flywheel.top.schedule() }
             .whenFalse { Flywheel.off.schedule() }
-//        Gamepads.gamepad2.square.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
-//            .whenTrue {
-//                SequentialGroup(
-//                    Fries.fireLeft,
-//                    Delay(0.2.seconds),
-//                    Fries.intakeLeft
-//                ).schedule()
-//            }
-//        Gamepads.gamepad2.triangle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
-//            .whenTrue {
-//                SequentialGroup(
-//                    Fries.fireCenter,
-//                    Delay(0.2.seconds),
-//                    Fries.intakeCenter
-//                ).schedule()
-//            }
-//        Gamepads.gamepad2.circle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
-//            .whenTrue {
-//                SequentialGroup(
-//                    Fries.fireRight,
-//                    Delay(0.2.seconds),
-//                    Fries.intakeRight
-//                ).schedule()
-//            }
         Gamepads.gamepad2.cross.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenTrue {
                 ParallelGroup(
@@ -82,84 +46,38 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
                     SequentialGroup(
                         Fries.fireLeft,
                         Delay(0.2.seconds),
-                        Fries.intakeLeft,
                         Fries.fireCenter,
                         Delay(0.2.seconds),
-                        Fries.intakeCenter,
                         Fries.fireRight,
                         Delay(0.2.seconds),
-                        Fries.intakeRight
+                        Fries.intakeAll
                     )
                 ).schedule()
             }
-
-        // DELETE ME
-//        Gamepads.gamepad1.square
-//            .whenTrue {
-//                SequentialGroup(
-//                    Fries.fireLeft,
-//                    Delay(0.2.seconds),
-//                    Fries.intakeLeft
-//                ).schedule()
-//            }
-//        Gamepads.gamepad1.triangle
-//            .whenTrue {
-//                SequentialGroup(
-//                    Fries.fireCenter,
-//                    Delay(0.2.seconds),
-//                    Fries.intakeCenter
-//                ).schedule()
-//            }
-//        Gamepads.gamepad1.circle
-//            .whenTrue {
-//                SequentialGroup(
-//                    Fries.fireRight,
-//                    Delay(0.2.seconds),
-//                    Fries.intakeRight
-//                ).schedule()
-//            }
-//        Gamepads.gamepad1.cross
-//            .whenTrue {
-//                ParallelGroup(
-//                    SequentialGroup(
-//                        Fries.fireLeft,
-//                        Delay(0.2.seconds),
-//                        Fries.intakeLeft,
-//                        Fries.fireCenter,
-//                        Delay(0.2.seconds),
-//                        Fries.intakeCenter,
-//                        Fries.fireRight,
-//                        Delay(0.2.seconds),
-//                        Fries.intakeRight
-//                    )
-//                ).schedule()
-//            }
-//        Gamepads.gamepad1.dpadUp
-//            .whenTrue {
-//                if (runtime - lastAdjustTime >= 0.1) {
-//                    Flywheel.velocity += 50
-//                    lastAdjustTime = runtime
-//                }
-//            }
-//        Gamepads.gamepad1.dpadDown
-//            .whenTrue {
-//                if (runtime - lastAdjustTime >= 0.1) {
-//                    Flywheel.velocity -= 50
-//                    lastAdjustTime = runtime
-//                }
-//            }
-//        Gamepads.gamepad1.dpadLeft
-//            .whenTrue { Flywheel.close.schedule() }
-//        Gamepads.gamepad1.dpadRight
-//            .whenTrue { Flywheel.off.schedule() }
-//        Gamepads.gamepad2.dpadLeft
-//            .whenTrue { Hood.open.schedule() }
-//        Gamepads.gamepad2.dpadRight
-//            .whenTrue { Hood.close.schedule() }
-//        Gamepads.gamepad2.leftBumper
-//            .whenTrue { Intake.forward.schedule() }
-//        Gamepads.gamepad2.rightBumper
-//            .whenTrue { Intake.off.schedule() }
+        Gamepads.gamepad2.square.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
+            .whenTrue {
+                SequentialGroup(
+                    Fries.fireLeft,
+                    Delay(0.2.seconds),
+                    Fries.intakeLeft
+                ).schedule()
+            }
+        Gamepads.gamepad2.triangle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
+            .whenTrue {
+                SequentialGroup(
+                    Fries.fireCenter,
+                    Delay(0.2.seconds),
+                    Fries.intakeCenter
+                ).schedule()
+            }
+        Gamepads.gamepad2.circle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
+            .whenTrue {
+                SequentialGroup(
+                    Fries.fireRight,
+                    Delay(0.2.seconds),
+                    Fries.intakeRight
+                ).schedule()
+            }
     }
 
     override fun onInit() {
@@ -167,6 +85,7 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
             Gamepads.gamepad1.leftStickY.negate(),
             Gamepads.gamepad1.leftStickX.negate(),
             Gamepads.gamepad1.rightStickX.negate(),
+            Gamepads.gamepad1.cross,
             false,
             isBlue
         )

@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.hivemind.tele
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 
 @TeleOp(name = "Testing")
+@Disabled
 class TestingTeleop : Testing()
 
 @TeleOp(name = "Blue - Field Centric")

@@ -5,7 +5,6 @@ import dev.nextftc.hardware.impl.MotorEx
 import dev.nextftc.hardware.powerable.SetPower
 
 object Intake : Subsystem {
-
     private const val OFF = 0.0
     private const val FORWARD = -1.0
     private const val REVERSE = 1.0
