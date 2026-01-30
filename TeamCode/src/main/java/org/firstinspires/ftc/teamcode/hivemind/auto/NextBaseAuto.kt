@@ -16,10 +16,11 @@ import org.firstinspires.ftc.teamcode.hivemind.pedroPathing.Constants
 import org.firstinspires.ftc.teamcode.hivemind.subsystems.Flywheel
 import org.firstinspires.ftc.teamcode.hivemind.subsystems.Fries
 import org.firstinspires.ftc.teamcode.hivemind.subsystems.Intake
-import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
-abstract class NextBaseAuto(val paths: Paths) : NextFTCOpMode() {
+abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOpMode() {
+
+    lateinit var paths: Paths
 
     init {
         addComponents(
@@ -33,7 +34,8 @@ abstract class NextBaseAuto(val paths: Paths) : NextFTCOpMode() {
     override fun onStartButtonPressed() {
         SequentialGroup(
             // Start Delay
-            Delay(100.milliseconds),
+            Flywheel.top,
+            Delay(2.seconds),
 
             // Shoot Preload
             driveAndShoot(paths.initialShootPath),
@@ -59,6 +61,7 @@ abstract class NextBaseAuto(val paths: Paths) : NextFTCOpMode() {
     }
 
     override fun onInit() {
+        paths = PathsBuilder.build(isBlue, isTop, follower)
         follower.setStartingPose(paths.startPose)
     }
 
@@ -72,7 +75,6 @@ abstract class NextBaseAuto(val paths: Paths) : NextFTCOpMode() {
 
     val driveAndShoot: (PathChain) -> Command = {
         SequentialGroup(
-            Flywheel.top,
             FollowPath(it),
             Fries.fireLeft,
             Delay(0.2.seconds),
@@ -80,7 +82,6 @@ abstract class NextBaseAuto(val paths: Paths) : NextFTCOpMode() {
             Delay(0.2.seconds),
             Fries.fireRight,
             Delay(0.2.seconds),
-            Flywheel.off,
             Fries.intakeAll
         )
     }

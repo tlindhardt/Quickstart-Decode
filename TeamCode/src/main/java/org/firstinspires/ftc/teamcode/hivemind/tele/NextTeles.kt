@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 @TeleOp(name = "Testing")
 class TestingTeleop : Testing()
 
-@TeleOp(name = "Next Hivemind - Field Centric")
-class FieldCentricHivemindTeleOp : NextBaseTele(false)
+@TeleOp(name = "Blue - Field Centric")
+class BlueFieldCentricHivemindTeleOp : NextBaseTele(isBlue = true)
 
-@TeleOp(name = "Next Hivemind - Bot Centric")
-class BotCentricHivemindTeleOp : NextBaseTele()
+@TeleOp(name = "Red - Field Centric")
+class RedFieldCentricHivemindTeleOp : NextBaseTele(isBlue = false)

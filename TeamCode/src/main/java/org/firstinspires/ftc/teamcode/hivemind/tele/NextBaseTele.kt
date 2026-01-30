@@ -7,19 +7,20 @@ import dev.nextftc.core.commands.groups.SequentialGroup
 import dev.nextftc.core.components.BindingsComponent
 import dev.nextftc.core.components.SubsystemComponent
 import dev.nextftc.extensions.pedro.PedroComponent
-import dev.nextftc.extensions.pedro.PedroDriverControlled
 import dev.nextftc.ftc.ActiveOpMode
 import dev.nextftc.ftc.Gamepads
 import dev.nextftc.ftc.NextFTCOpMode
 import dev.nextftc.ftc.components.BulkReadComponent
 import org.firstinspires.ftc.teamcode.hivemind.pedroPathing.Constants
+import org.firstinspires.ftc.teamcode.hivemind.subsystems.AutoShootPedroDriverControlled
 import org.firstinspires.ftc.teamcode.hivemind.subsystems.Flywheel
 import org.firstinspires.ftc.teamcode.hivemind.subsystems.Fries
 import org.firstinspires.ftc.teamcode.hivemind.subsystems.Intake
 import kotlin.time.Duration.Companion.seconds
 
-abstract class NextBaseTele(val botCentric: Boolean = true) : NextFTCOpMode() {
-    private var lastAdjustTime = 0.0
+abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
+
+    lateinit var driverControlled: AutoShootPedroDriverControlled
 
     init {
         addComponents(
@@ -32,14 +33,21 @@ abstract class NextBaseTele(val botCentric: Boolean = true) : NextFTCOpMode() {
 
     override fun onStartButtonPressed() {
         // DRIVER CONTROLS
-        Gamepads.gamepad1.rightTrigger.greaterThan(.3)
-            .whenBecomesTrue { Intake.forward.schedule() }
-            .whenBecomesFalse { Intake.off.schedule() }
-        Gamepads.gamepad1.leftTrigger.greaterThan(.3)
-            .whenBecomesTrue { Intake.reverse.schedule() }
-            .whenBecomesFalse { Intake.off.schedule() }
+        Gamepads.gamepad1.cross
+            .whenBecomesTrue {
+                driverControlled.isAutoTracking = true
+            }
+            .whenBecomesFalse {
+                driverControlled.isAutoTracking = false
+            }
 
         // SHOOTER CONTROLS
+        Gamepads.gamepad2.rightBumper
+            .whenBecomesTrue { Intake.forward.schedule() }
+            .whenBecomesFalse { Intake.off.schedule() }
+        Gamepads.gamepad2.leftBumper
+            .whenBecomesTrue { Intake.reverse.schedule() }
+            .whenBecomesFalse { Intake.off.schedule() }
         Gamepads.gamepad2.rightTrigger.greaterThan(.3)
             .whenTrue { Flywheel.top.schedule() }
             .whenFalse { Flywheel.off.schedule() }
@@ -155,11 +163,12 @@ abstract class NextBaseTele(val botCentric: Boolean = true) : NextFTCOpMode() {
     }
 
     override fun onInit() {
-        val driverControlled = PedroDriverControlled(
+        driverControlled = AutoShootPedroDriverControlled(
             Gamepads.gamepad1.leftStickY.negate(),
             Gamepads.gamepad1.leftStickX.negate(),
             Gamepads.gamepad1.rightStickX.negate(),
-            botCentric
+            false,
+            isBlue
         )
         driverControlled()
     }
