@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.hivemind.tele
 
 import dev.nextftc.bindings.BindingManager
 import dev.nextftc.core.commands.delays.Delay
-import dev.nextftc.core.commands.groups.ParallelGroup
 import dev.nextftc.core.commands.groups.SequentialGroup
 import dev.nextftc.core.components.BindingsComponent
 import dev.nextftc.core.components.SubsystemComponent
@@ -41,17 +40,14 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
             .whenFalse { Flywheel.off.schedule() }
         Gamepads.gamepad2.cross.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenTrue {
-                ParallelGroup(
-                    Intake.off,
-                    SequentialGroup(
-                        Fries.fireLeft,
-                        Delay(0.2.seconds),
-                        Fries.fireCenter,
-                        Delay(0.2.seconds),
-                        Fries.fireRight,
-                        Delay(0.2.seconds),
-                        Fries.intakeAll
-                    )
+                SequentialGroup(
+                    Fries.fireLeft,
+                    Delay(0.2.seconds),
+                    Fries.fireCenter,
+                    Delay(0.2.seconds),
+                    Fries.fireRight,
+                    Delay(0.2.seconds),
+                    Fries.intakeAll
                 ).schedule()
             }
         Gamepads.gamepad2.square.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))

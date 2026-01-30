@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.hivemind.subsystems
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor
 import dev.nextftc.core.subsystems.SubsystemGroup
 import dev.nextftc.ftc.ActiveOpMode.hardwareMap
-import dev.nextftc.ftc.ActiveOpMode.telemetry
 
 object ColorSensors : SubsystemGroup(
     Intake,
@@ -26,47 +25,49 @@ object ColorSensors : SubsystemGroup(
     }
 
     override fun periodic() {
-        var found = false
+        var found1 = false
+        var found2 = false
+        var found3 = false
         val leftColors = leftSensor.normalizedColors
         if (leftColors.alpha > .1) {
-            found = true
+            found1 = true
             Fries.closeLeft.schedule()
-//            if (leftColors.green > leftColors.blue) {
-//                Lights.leftGreen.schedule()
-//            } else {
-//                Lights.leftPurple.schedule()
-//            }
+            if (leftColors.green > leftColors.blue) {
+                Lights.leftGreen.schedule()
+            } else {
+                Lights.leftPurple.schedule()
+            }
         } else {
-//            Lights.leftOff.schedule()
+            Lights.leftOff.schedule()
         }
 
         val centerColors = centerSensor.normalizedColors
         if (centerColors.alpha > .1) {
-            found = true
+            found2 = true
             Fries.closeCenter.schedule()
-//            if (centerColors.green > centerColors.blue) {
-//                Lights.centerGreen.schedule()
-//            } else {
-//                Lights.centerPurple.schedule()
-//            }
+            if (centerColors.green > centerColors.blue) {
+                Lights.centerGreen.schedule()
+            } else {
+                Lights.centerPurple.schedule()
+            }
         } else {
-//            Lights.centerOff.schedule()
+            Lights.centerOff.schedule()
         }
 
         val rightColors = rightSensor.normalizedColors
         if (rightColors.alpha > .1) {
-            found = true
+            found3 = true
             Fries.closeRight.schedule()
-//            if (rightColors.green > rightColors.blue) {
-//                Lights.rightGreen.schedule()
-//            } else {
-//                Lights.rightPurple.schedule()
-//            }
+            if (rightColors.green > rightColors.blue) {
+                Lights.rightGreen.schedule()
+            } else {
+                Lights.rightPurple.schedule()
+            }
         } else {
-//            Lights.rightOff.schedule()
+            Lights.rightOff.schedule()
         }
 
-        if (found) {
+        if (found1 && found2 && found3) {
             Intake.off.schedule()
         }
     }

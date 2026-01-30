@@ -12,13 +12,13 @@ class PathsBuilder {
         val bottomStartPose = Pose(57.0, 7.5, Math.toRadians(90.0))
         val shootPose = Pose(57.0, 100.0, Math.toRadians(142.0))
         val topSpikeStartPose = Pose(24.0, 96.0, Math.toRadians(270.0))
-        val topSpikeEndPose = Pose(24.0, 89.0, Math.toRadians(270.0))
+        val topSpikeEndPose = Pose(24.0, 86.0, Math.toRadians(270.0))
         val centerSpikeStartPose = Pose(24.0, 72.0, Math.toRadians(270.0))
-        val centerSpikeEndPose = Pose(24.0, 65.0, Math.toRadians(270.0))
+        val centerSpikeEndPose = Pose(24.0, 62.0, Math.toRadians(270.0))
         val bottomSpikeStartPose = Pose(24.0, 48.0, Math.toRadians(270.0))
-        val bottomSpikeEndPose = Pose(24.0, 41.0, Math.toRadians(270.0))
+        val bottomSpikeEndPose = Pose(24.0, 38.0, Math.toRadians(270.0))
         val loadStartPose = Pose(15.0, 9.0, Math.toRadians(180.0))
-        val loadEndPose = Pose(8.0, 9.0, Math.toRadians(180.0))
+        val loadEndPose = Pose(10.0, 9.0, Math.toRadians(180.0))
 
         fun build(isBlue: Boolean, isTop: Boolean, follower: Follower): Paths {
             val startPose = if (isTop) topStartPose else bottomStartPose
