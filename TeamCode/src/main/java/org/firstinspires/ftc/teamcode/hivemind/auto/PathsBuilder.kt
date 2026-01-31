@@ -21,10 +21,9 @@ class PathsBuilder {
         val loadEndPose = Pose(10.0, 9.0, Math.toRadians(180.0))
 
         fun build(isBlue: Boolean, isTop: Boolean, follower: Follower): Paths {
-            var startPose = if (isTop) topStartPose else bottomStartPose
-            startPose = if (isBlue) startPose else startPose.mirror()
+            val startPose = if (isTop) topStartPose else bottomStartPose
             return Paths(
-                startPose,
+                if (isBlue) startPose else startPose.mirror(),
                 buildPath(startPose, shootPose, isBlue, follower),
 
                 // Top Spike
