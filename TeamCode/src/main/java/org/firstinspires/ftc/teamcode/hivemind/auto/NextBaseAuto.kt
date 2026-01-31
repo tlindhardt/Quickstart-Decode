@@ -32,40 +32,42 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
     }
 
     override fun onStartButtonPressed() {
-        SequentialGroup(
-            // Start Delay
-            Flywheel.top,
-            Delay(1.seconds),
-
-            // Shoot Preload
-            driveAndShoot(paths.initialShootPath),
-
-            // Shoot Top Spike
-            driveAndLoad(paths.topSpike),
-            driveAndShoot(paths.topSpikeShootPath),
-
-            // Shoot Center Spike
-            driveAndLoad(paths.centerSpike),
-            driveAndShoot(paths.centerSpikeShootPath),
-
-            // Shoot Bottom Spike
-            driveAndLoad(paths.bottomSpike),
-            driveAndShoot(paths.bottomSpikeShootPath),
-
-            //Shoot Load
-            driveAndLoad(paths.load),
-            driveAndShoot(paths.loadShootPath),
-
-            FollowPath(paths.centerSpike.first),
-        ).schedule()
+        paths = PathsBuilder.build(isBlue, isTop, follower)
+        FollowPath(paths.initialShootPath).schedule()
+//        SequentialGroup(
+//            // Start Delay
+////            Flywheel.top,
+//            Delay(1.seconds),
+//
+//            // Shoot Preload
+//            driveAndShoot(paths.initialShootPath),
+//
+//            // Shoot Top Spike
+//            driveAndLoad(paths.topSpike),
+//            driveAndShoot(paths.topSpikeShootPath),
+//
+//            // Shoot Center Spike
+//            driveAndLoad(paths.centerSpike),
+//            driveAndShoot(paths.centerSpikeShootPath),
+//
+//            // Shoot Bottom Spike
+//            driveAndLoad(paths.bottomSpike),
+//            driveAndShoot(paths.bottomSpikeShootPath),
+//
+//            //Shoot Load
+//            driveAndLoad(paths.load),
+//            driveAndShoot(paths.loadShootPath),
+//
+//            FollowPath(paths.centerSpike.first),
+//        ).schedule()
     }
 
     override fun onInit() {
-        paths = PathsBuilder.build(isBlue, isTop, follower)
-        follower.setStartingPose(paths.startPose)
     }
 
     override fun onUpdate() {
+        ActiveOpMode.telemetry.addData("start", paths.startPose)
+        ActiveOpMode.telemetry.addData("end", paths.initialShootPath.endPose())
         ActiveOpMode.telemetry.update()
     }
 
