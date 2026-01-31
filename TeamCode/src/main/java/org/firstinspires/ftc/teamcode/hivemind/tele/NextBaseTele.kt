@@ -36,42 +36,50 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
             .whenBecomesTrue { Intake.reverse.schedule() }
             .whenBecomesFalse { Intake.off.schedule() }
         Gamepads.gamepad2.rightTrigger.greaterThan(.3)
-            .whenTrue { Flywheel.top.schedule() }
-            .whenFalse { Flywheel.off.schedule() }
+            .whenBecomesTrue { Flywheel.top.schedule() }
+            .whenBecomesFalse { Flywheel.off.schedule() }
         Gamepads.gamepad2.cross.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
-            .whenTrue {
+            .whenBecomesTrue {
                 SequentialGroup(
+                    ColorSensors.startShooting,
                     Fries.fireLeft,
                     Delay(0.2.seconds),
                     Fries.fireCenter,
                     Delay(0.2.seconds),
                     Fries.fireRight,
                     Delay(0.2.seconds),
-                    Fries.intakeAll
+                    Fries.intakeAll,
+                    ColorSensors.endShooting
                 ).schedule()
             }
         Gamepads.gamepad2.square.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
-            .whenTrue {
+            .whenBecomesTrue {
                 SequentialGroup(
+                    ColorSensors.startShooting,
                     Fries.fireLeft,
                     Delay(0.2.seconds),
-                    Fries.intakeLeft
+                    Fries.intakeLeft,
+                    ColorSensors.endShooting
                 ).schedule()
             }
         Gamepads.gamepad2.triangle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
-            .whenTrue {
+            .whenBecomesTrue {
                 SequentialGroup(
+                    ColorSensors.startShooting,
                     Fries.fireCenter,
                     Delay(0.2.seconds),
-                    Fries.intakeCenter
+                    Fries.intakeCenter,
+                    ColorSensors.endShooting
                 ).schedule()
             }
         Gamepads.gamepad2.circle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
-            .whenTrue {
+            .whenBecomesTrue {
                 SequentialGroup(
+                    ColorSensors.startShooting,
                     Fries.fireRight,
                     Delay(0.2.seconds),
-                    Fries.intakeRight
+                    Fries.intakeRight,
+                    ColorSensors.endShooting
                 ).schedule()
             }
     }

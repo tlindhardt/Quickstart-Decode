@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hivemind.subsystems
 
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor
+import dev.nextftc.core.commands.utility.InstantCommand
 import dev.nextftc.core.subsystems.SubsystemGroup
 import dev.nextftc.ftc.ActiveOpMode.hardwareMap
 
@@ -12,6 +13,11 @@ object ColorSensors : SubsystemGroup(
     lateinit var leftSensor: NormalizedColorSensor
     lateinit var centerSensor: NormalizedColorSensor
     lateinit var rightSensor: NormalizedColorSensor
+
+    var isShooting: Boolean = false
+
+    var startShooting = InstantCommand { isShooting = true }
+    var endShooting = InstantCommand { isShooting = false }
 
     override fun initialize() {
         leftSensor = hardwareMap.get(NormalizedColorSensor::class.java, "left_color")
@@ -31,7 +37,9 @@ object ColorSensors : SubsystemGroup(
         val leftColors = leftSensor.normalizedColors
         if (leftColors.alpha > .1) {
             found1 = true
-            Fries.closeLeft.schedule()
+            if (!isShooting) {
+                Fries.closeLeft.schedule()
+            }
             if (leftColors.green > leftColors.blue) {
                 Lights.leftGreen.schedule()
             } else {
@@ -44,7 +52,9 @@ object ColorSensors : SubsystemGroup(
         val centerColors = centerSensor.normalizedColors
         if (centerColors.alpha > .1) {
             found2 = true
-            Fries.closeCenter.schedule()
+            if (!isShooting) {
+                Fries.closeCenter.schedule()
+            }
             if (centerColors.green > centerColors.blue) {
                 Lights.centerGreen.schedule()
             } else {
@@ -57,7 +67,9 @@ object ColorSensors : SubsystemGroup(
         val rightColors = rightSensor.normalizedColors
         if (rightColors.alpha > .1) {
             found3 = true
-            Fries.closeRight.schedule()
+            if (!isShooting) {
+                Fries.closeRight.schedule()
+            }
             if (rightColors.green > rightColors.blue) {
                 Lights.rightGreen.schedule()
             } else {

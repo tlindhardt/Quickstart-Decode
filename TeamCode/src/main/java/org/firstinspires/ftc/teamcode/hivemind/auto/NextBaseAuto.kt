@@ -35,7 +35,7 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
         SequentialGroup(
             // Start Delay
             Flywheel.top,
-            Delay(2.seconds),
+            Delay(1.seconds),
 
             // Shoot Preload
             driveAndShoot(paths.initialShootPath),
@@ -76,6 +76,7 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
     val driveAndShoot: (PathChain) -> Command = {
         SequentialGroup(
             FollowPath(it),
+            Delay(0.2.seconds),
             Fries.fireLeft,
             Delay(0.2.seconds),
             Fries.fireCenter,
@@ -89,6 +90,7 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
     val driveAndLoad: (Pair<PathChain, PathChain>) -> Command = {
         SequentialGroup(
             FollowPath(it.first),
+            Delay(0.2.seconds),
             Intake.forward,
             FollowPath(it.second),
             Intake.off,
