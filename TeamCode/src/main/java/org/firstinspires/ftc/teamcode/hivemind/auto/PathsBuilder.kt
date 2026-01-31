@@ -21,7 +21,8 @@ class PathsBuilder {
         val loadEndPose = Pose(10.0, 9.0, Math.toRadians(180.0))
 
         fun build(isBlue: Boolean, isTop: Boolean, follower: Follower): Paths {
-            val startPose = if (isTop) topStartPose else bottomStartPose
+            var startPose = if (isTop) topStartPose else bottomStartPose
+            startPose = if (isBlue) startPose else startPose.mirror()
             return Paths(
                 startPose,
                 buildPath(startPose, shootPose, isBlue, follower),
@@ -60,6 +61,7 @@ class PathsBuilder {
             val startPose = if (isBlue) startPose else startPose.mirror()
             val endPose = if (isBlue) endPose else endPose.mirror()
             return follower.pathBuilder()
+                .setGlobalDeceleration()
                 .addPath(BezierLine(startPose, endPose))
                 .setLinearHeadingInterpolation(startPose.heading, endPose.heading)
                 .build()
