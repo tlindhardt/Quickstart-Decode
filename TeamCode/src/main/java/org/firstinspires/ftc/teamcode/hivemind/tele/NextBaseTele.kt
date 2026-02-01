@@ -35,10 +35,13 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
         Gamepads.gamepad2.leftBumper
             .whenBecomesTrue { Intake.reverse.schedule() }
             .whenBecomesFalse { Intake.off.schedule() }
+        Gamepads.gamepad2.leftTrigger.greaterThan(.3)
+            .whenBecomesTrue { Flywheel.bottom.schedule() }
+            .whenBecomesFalse { Flywheel.off.schedule() }
         Gamepads.gamepad2.rightTrigger.greaterThan(.3)
             .whenBecomesTrue { Flywheel.top.schedule() }
             .whenBecomesFalse { Flywheel.off.schedule() }
-        Gamepads.gamepad2.cross.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
+        Gamepads.gamepad2.cross.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3).or(Gamepads.gamepad2.leftTrigger.greaterThan(0.3)))
             .whenBecomesTrue {
                 SequentialGroup(
                     ColorSensors.startShooting,

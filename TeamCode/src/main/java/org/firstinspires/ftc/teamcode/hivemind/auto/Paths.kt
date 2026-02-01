@@ -8,6 +8,7 @@ data class Paths(
     val initialShootPath: PathChain,
     val topSpike: Pair<PathChain, PathChain>,
     val topSpikeShootPath: PathChain,
+    val bumpPath: PathChain,
     val centerSpike: Pair<PathChain, PathChain>,
     val centerSpikeShootPath: PathChain,
     val bottomSpike: Pair<PathChain, PathChain>,

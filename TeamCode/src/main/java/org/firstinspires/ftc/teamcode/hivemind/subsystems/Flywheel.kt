@@ -17,6 +17,7 @@ import dev.nextftc.hardware.impl.MotorEx
 object Flywheel : Subsystem {
     private const val OFF = 0.0
     private const val TOP = 1050.0
+    private const val BOTTOM = 1400.0
 
     @JvmField
     var velPidCoefficients = PIDCoefficients(0.007, 0.0, 0.0)  // P, I, D for velocity PID
@@ -43,6 +44,8 @@ object Flywheel : Subsystem {
     val off = InstantCommand { setTargetVelocity(OFF) }
 
     val top = InstantCommand { setTargetVelocity(TOP) }
+
+    val bottom = InstantCommand { setTargetVelocity(BOTTOM) }
 
     override fun periodic() {
         flywheel.power = controller.calculate(flywheel.state)

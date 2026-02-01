@@ -8,11 +8,13 @@ import com.pedropathing.paths.PathChain
 class PathsBuilder {
 
     companion object {
-        val topStartPose = Pose(25.5, 129.5, Math.toRadians(135.0))
-        val bottomStartPose = Pose(57.0, 7.5, Math.toRadians(90.0))
+
+        val topStartPose = Pose(28.5, 125.5, Math.toRadians(135.0))
+        val bottomStartPose = Pose(57.0, 8.5, Math.toRadians(90.0))
         val shootPose = Pose(57.0, 100.0, Math.toRadians(148.0))
         val topSpikeStartPose = Pose(24.5, 96.0, Math.toRadians(270.0))
         val topSpikeEndPose = Pose(24.5, 84.0, Math.toRadians(270.0))
+        val bumpPose = Pose(20.5, 74.0, Math.toRadians(270.0))
         val centerSpikeStartPose = Pose(24.5, 74.0, Math.toRadians(270.0))
         val centerSpikeEndPose = Pose(24.5, 62.0, Math.toRadians(270.0))
         val bottomSpikeStartPose = Pose(24.5, 50.0, Math.toRadians(270.0))
@@ -31,7 +33,8 @@ class PathsBuilder {
                     buildPath(shootPose, topSpikeStartPose, isBlue, follower),
                     buildPath(topSpikeStartPose, topSpikeEndPose, isBlue, follower)
                 ),
-                buildPath(topSpikeEndPose, shootPose, isBlue, follower),
+                buildPath(topSpikeEndPose, bumpPose, isBlue, follower),
+                buildPath(bumpPose, shootPose, isBlue, follower),
 
                 // Center Spike
                 Pair(
