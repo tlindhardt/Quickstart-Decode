@@ -15,4 +15,5 @@ data class Paths(
     val bottomSpikeShootPath: PathChain,
     val load: Pair<PathChain, PathChain>,
     val loadShootPath: PathChain,
+    val endPath: PathChain,
 )

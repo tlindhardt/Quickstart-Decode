@@ -25,7 +25,7 @@ abstract class Testing() : NextFTCOpMode() {
 
     override fun onInit() {
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next()
-        Flywheel.top.schedule()
+        Flywheel.close.schedule()
     }
 
     override fun onUpdate() {

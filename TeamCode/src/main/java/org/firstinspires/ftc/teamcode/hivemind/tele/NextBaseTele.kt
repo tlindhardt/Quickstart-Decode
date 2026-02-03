@@ -6,6 +6,7 @@ import dev.nextftc.core.commands.groups.SequentialGroup
 import dev.nextftc.core.components.BindingsComponent
 import dev.nextftc.core.components.SubsystemComponent
 import dev.nextftc.extensions.pedro.PedroComponent
+import dev.nextftc.extensions.pedro.PedroComponent.Companion.follower
 import dev.nextftc.ftc.ActiveOpMode
 import dev.nextftc.ftc.Gamepads
 import dev.nextftc.ftc.NextFTCOpMode
@@ -28,6 +29,16 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
     }
 
     override fun onStartButtonPressed() {
+        ColorSensors.startRunning.schedule()
+        Gamepads.gamepad1.dpadUp
+            .whenBecomesTrue { driverControlled.x++ }
+        Gamepads.gamepad1.dpadDown
+            .whenBecomesTrue { driverControlled.x-- }
+        Gamepads.gamepad1.dpadRight
+            .whenBecomesTrue { driverControlled.y++ }
+        Gamepads.gamepad1.dpadLeft
+            .whenBecomesTrue { driverControlled.y-- }
+
         // SHOOTER CONTROLS
         Gamepads.gamepad2.rightBumper
             .whenBecomesTrue { Intake.forward.schedule() }
@@ -35,13 +46,15 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
         Gamepads.gamepad2.leftBumper
             .whenBecomesTrue { Intake.reverse.schedule() }
             .whenBecomesFalse { Intake.off.schedule() }
-        Gamepads.gamepad2.leftTrigger.greaterThan(.3)
-            .whenBecomesTrue { Flywheel.bottom.schedule() }
-            .whenBecomesFalse { Flywheel.off.schedule() }
         Gamepads.gamepad2.rightTrigger.greaterThan(.3)
-            .whenBecomesTrue { Flywheel.top.schedule() }
+            .whenBecomesTrue { Flywheel.auto(isBlue).schedule() }
             .whenBecomesFalse { Flywheel.off.schedule() }
-        Gamepads.gamepad2.cross.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3).or(Gamepads.gamepad2.leftTrigger.greaterThan(0.3)))
+        Gamepads.gamepad2.leftTrigger.greaterThan(.3)
+            .whenBecomesTrue { Flywheel.close.schedule() }
+            .whenBecomesFalse { Flywheel.off.schedule() }
+        Gamepads.gamepad2.cross.and(
+            Gamepads.gamepad2.rightTrigger.greaterThan(0.3).or(Gamepads.gamepad2.leftTrigger.greaterThan(0.3))
+        )
             .whenBecomesTrue {
                 SequentialGroup(
                     ColorSensors.startShooting,
@@ -106,6 +119,15 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
 
     override fun onStop() {
         BindingManager.reset()
+        ColorSensors.stopRunning.schedule()
+        Flywheel.off.schedule()
+        Fries.intakeAll.schedule()
+        Intake.off.schedule()
+        Lights.leftOff.schedule()
+        Lights.rightOff.schedule()
+        Lights.centerOff.schedule()
+        ColorSensors.endShooting.schedule()
+        driverControlled.stop(true)
     }
 
     override fun onWaitForStart() {

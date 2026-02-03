@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.hivemind.pedroPathing.Constants
 import org.firstinspires.ftc.teamcode.hivemind.subsystems.Flywheel
 import org.firstinspires.ftc.teamcode.hivemind.subsystems.Fries
 import org.firstinspires.ftc.teamcode.hivemind.subsystems.Intake
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOpMode() {
@@ -34,7 +35,7 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
     override fun onStartButtonPressed() {
         SequentialGroup(
             // Start Delay
-            Flywheel.top,
+            Flywheel.close,
             Delay(1.seconds),
 
             // Shoot Preload
@@ -42,8 +43,9 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
 
             // Shoot Top Spike
             driveAndLoad(paths.topSpike),
-            driveAndShoot(paths.topSpikeShootPath),
             FollowPath(paths.bumpPath),
+            Delay(200.milliseconds),
+            driveAndShoot(paths.topSpikeShootPath),
 
             // Shoot Center Spike
             driveAndLoad(paths.centerSpike),
@@ -54,10 +56,11 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
             driveAndShoot(paths.bottomSpikeShootPath),
 
             //Shoot Load
-            driveAndLoad(paths.load),
-            driveAndShoot(paths.loadShootPath),
+//            driveAndLoad(paths.load),
+//            driveAndShoot(paths.loadShootPath),
 
-            FollowPath(paths.centerSpike.first),
+            FollowPath(paths.endPath),
+            Flywheel.off
         ).schedule()
     }
 
@@ -74,10 +77,16 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
         ActiveOpMode.telemetry.update()
     }
 
+    override fun onStop() {
+        Flywheel.off.schedule()
+        Fries.intakeAll.schedule()
+        Intake.off.schedule()
+    }
+
     val driveAndShoot: (PathChain) -> Command = {
         SequentialGroup(
             FollowPath(it),
-            Delay(0.2.seconds),
+            Delay(0.5.seconds),
             Fries.fireLeft,
             Delay(0.2.seconds),
             Fries.fireCenter,
