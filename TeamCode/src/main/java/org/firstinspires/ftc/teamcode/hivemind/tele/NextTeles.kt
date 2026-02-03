@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp
 @Disabled
 class TestingTeleop : Testing()
 
-@TeleOp(name = "Blue - Field Centric")
+@TeleOp(name = "Blue - Teleop")
 class BlueFieldCentricHivemindTeleOp : NextBaseTele(isBlue = true)
 
-@TeleOp(name = "Red - Field Centric")
+@TeleOp(name = "Red - Teleop")
 class RedFieldCentricHivemindTeleOp : NextBaseTele(isBlue = false)

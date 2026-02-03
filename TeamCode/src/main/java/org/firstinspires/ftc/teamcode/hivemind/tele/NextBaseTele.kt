@@ -6,7 +6,6 @@ import dev.nextftc.core.commands.groups.SequentialGroup
 import dev.nextftc.core.components.BindingsComponent
 import dev.nextftc.core.components.SubsystemComponent
 import dev.nextftc.extensions.pedro.PedroComponent
-import dev.nextftc.extensions.pedro.PedroComponent.Companion.follower
 import dev.nextftc.ftc.ActiveOpMode
 import dev.nextftc.ftc.Gamepads
 import dev.nextftc.ftc.NextFTCOpMode
@@ -22,14 +21,14 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
     init {
         addComponents(
             PedroComponent(Constants::createFollower),
-            SubsystemComponent(Flywheel, Fries, Intake, Lights, ColorSensors),
+            SubsystemComponent(Camera, ColorSensors, Flywheel, Fries, Intake, Lights),
             BulkReadComponent,
             BindingsComponent
         )
     }
 
     override fun onStartButtonPressed() {
-        ColorSensors.startRunning.schedule()
+        Fries.startRunning.schedule()
         Gamepads.gamepad1.dpadUp
             .whenBecomesTrue { driverControlled.x++ }
         Gamepads.gamepad1.dpadDown
@@ -49,53 +48,41 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
         Gamepads.gamepad2.rightTrigger.greaterThan(.3)
             .whenBecomesTrue { Flywheel.auto(isBlue).schedule() }
             .whenBecomesFalse { Flywheel.off.schedule() }
-        Gamepads.gamepad2.leftTrigger.greaterThan(.3)
-            .whenBecomesTrue { Flywheel.close.schedule() }
-            .whenBecomesFalse { Flywheel.off.schedule() }
-        Gamepads.gamepad2.cross.and(
-            Gamepads.gamepad2.rightTrigger.greaterThan(0.3).or(Gamepads.gamepad2.leftTrigger.greaterThan(0.3))
-        )
+//        Gamepads.gamepad2.leftTrigger.greaterThan(.3)
+//            .whenBecomesTrue { Flywheel.close.schedule() }
+//            .whenBecomesFalse { Flywheel.off.schedule() }
+        Gamepads.gamepad2.cross.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenBecomesTrue {
-                SequentialGroup(
-                    ColorSensors.startShooting,
-                    Fries.fireLeft,
-                    Delay(0.2.seconds),
-                    Fries.fireCenter,
-                    Delay(0.2.seconds),
-                    Fries.fireRight,
-                    Delay(0.2.seconds),
-                    Fries.intakeAll,
-                    ColorSensors.endShooting
-                ).schedule()
+                Fries.fireAllSorted(.2.seconds).schedule()
             }
         Gamepads.gamepad2.square.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenBecomesTrue {
                 SequentialGroup(
-                    ColorSensors.startShooting,
+                    Fries.startShooting,
                     Fries.fireLeft,
                     Delay(0.2.seconds),
                     Fries.intakeLeft,
-                    ColorSensors.endShooting
+                    Fries.endShooting
                 ).schedule()
             }
         Gamepads.gamepad2.triangle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenBecomesTrue {
                 SequentialGroup(
-                    ColorSensors.startShooting,
+                    Fries.startShooting,
                     Fries.fireCenter,
                     Delay(0.2.seconds),
                     Fries.intakeCenter,
-                    ColorSensors.endShooting
+                    Fries.endShooting
                 ).schedule()
             }
         Gamepads.gamepad2.circle.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenBecomesTrue {
                 SequentialGroup(
-                    ColorSensors.startShooting,
+                    Fries.startShooting,
                     Fries.fireRight,
                     Delay(0.2.seconds),
                     Fries.intakeRight,
-                    ColorSensors.endShooting
+                    Fries.endShooting
                 ).schedule()
             }
     }
@@ -119,14 +106,11 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
 
     override fun onStop() {
         BindingManager.reset()
-        ColorSensors.stopRunning.schedule()
         Flywheel.off.schedule()
         Fries.intakeAll.schedule()
         Intake.off.schedule()
-        Lights.leftOff.schedule()
-        Lights.rightOff.schedule()
-        Lights.centerOff.schedule()
-        ColorSensors.endShooting.schedule()
+        Fries.stopRunning.schedule()
+        Fries.endShooting.schedule()
         driverControlled.stop(true)
     }
 

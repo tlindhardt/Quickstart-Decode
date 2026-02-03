@@ -86,7 +86,7 @@ object Flywheel : Subsystem {
         flywheel.power = controller.calculate(flywheel.state)
         ActiveOpMode.telemetry.addData("velocity", flywheel.velocity)
         ActiveOpMode.telemetry.addData("desiredPower", desiredPower)
-        if (desiredPower > OFF && (flywheel.velocity >= desiredPower * 0.95)) {
+        if (desiredPower > OFF && (flywheel.velocity >= desiredPower * 0.99)) {
             Gamepads.gamepad2.gamepad().rumble(100)
         }
     }

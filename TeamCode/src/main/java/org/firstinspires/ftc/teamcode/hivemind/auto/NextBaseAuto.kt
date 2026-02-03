@@ -13,9 +13,7 @@ import dev.nextftc.ftc.ActiveOpMode
 import dev.nextftc.ftc.NextFTCOpMode
 import dev.nextftc.ftc.components.BulkReadComponent
 import org.firstinspires.ftc.teamcode.hivemind.pedroPathing.Constants
-import org.firstinspires.ftc.teamcode.hivemind.subsystems.Flywheel
-import org.firstinspires.ftc.teamcode.hivemind.subsystems.Fries
-import org.firstinspires.ftc.teamcode.hivemind.subsystems.Intake
+import org.firstinspires.ftc.teamcode.hivemind.subsystems.*
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -26,7 +24,7 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
     init {
         addComponents(
             PedroComponent(Constants::createFollower),
-            SubsystemComponent(Flywheel, Fries, Intake),
+            SubsystemComponent(Camera, ColorSensors, Flywheel, Fries, Intake, Lights),
             BulkReadComponent,
             BindingsComponent
         )
@@ -87,13 +85,7 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
         SequentialGroup(
             FollowPath(it),
             Delay(0.5.seconds),
-            Fries.fireLeft,
-            Delay(0.2.seconds),
-            Fries.fireCenter,
-            Delay(0.2.seconds),
-            Fries.fireRight,
-            Delay(0.2.seconds),
-            Fries.intakeAll
+            Fries.fireAllSorted(.2.seconds),
         )
     }
 
