@@ -9,6 +9,10 @@ object ColorSensors : Subsystem {
     lateinit var centerSensor: NormalizedColorSensor
     lateinit var rightSensor: NormalizedColorSensor
 
+    var leftLock = false
+    var centerLock = false
+    var rightLock = false
+
     var colorOrder: MutableList<Color> = mutableListOf(Color.EMPTY, Color.EMPTY, Color.EMPTY)
 
     override fun initialize() {
@@ -24,36 +28,42 @@ object ColorSensors : Subsystem {
 
     override fun periodic() {
         val leftColors = leftSensor.normalizedColors
-        if (leftColors.alpha > .08) {
-            if (leftColors.green > leftColors.blue) {
-                colorOrder[0] = Color.GREEN
+        if (!leftLock) {
+            if (leftColors.alpha > .08) {
+                if (leftColors.green > leftColors.blue) {
+                    colorOrder[0] = Color.GREEN
+                } else {
+                    colorOrder[0] = Color.PURPLE
+                }
             } else {
-                colorOrder[0] = Color.PURPLE
+                colorOrder[0] = Color.EMPTY
             }
-        } else {
-            colorOrder[0] = Color.EMPTY
         }
 
-        val centerColors = centerSensor.normalizedColors
-        if (centerColors.alpha > .08) {
-            if (centerColors.green > centerColors.blue) {
-                colorOrder[1] = Color.GREEN
+        if (!centerLock) {
+            val centerColors = centerSensor.normalizedColors
+            if (centerColors.alpha > .08) {
+                if (centerColors.green > centerColors.blue) {
+                    colorOrder[1] = Color.GREEN
+                } else {
+                    colorOrder[1] = Color.PURPLE
+                }
             } else {
-                colorOrder[1] = Color.PURPLE
+                colorOrder[1] = Color.EMPTY
             }
-        } else {
-            colorOrder[1] = Color.EMPTY
         }
 
-        val rightColors = rightSensor.normalizedColors
-        if (rightColors.alpha > .08) {
-            if (rightColors.green > rightColors.blue) {
-                colorOrder[2] = Color.GREEN
+        if (!rightLock) {
+            val rightColors = rightSensor.normalizedColors
+            if (rightColors.alpha > .08) {
+                if (rightColors.green > rightColors.blue) {
+                    colorOrder[2] = Color.GREEN
+                } else {
+                    colorOrder[2] = Color.PURPLE
+                }
             } else {
-                colorOrder[2] = Color.PURPLE
+                colorOrder[2] = Color.EMPTY
             }
-        } else {
-            colorOrder[2] = Color.EMPTY
         }
     }
 }

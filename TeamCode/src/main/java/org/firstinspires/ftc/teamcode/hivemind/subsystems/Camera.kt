@@ -14,6 +14,7 @@ object Camera : Subsystem {
 
     var obeliskOrder: List<Color> = listOf(Color.PURPLE, Color.GREEN, Color.PURPLE)
     var orderFound = false
+    var readyToRead = false
 
     override fun initialize() {
         aprilTag = AprilTagProcessor.easyCreateWithDefaults();
@@ -21,20 +22,24 @@ object Camera : Subsystem {
     }
 
     override fun periodic() {
-        if (!orderFound) {
-            val currentDetections: List<AprilTagDetection> = aprilTag.detections
-            for (detection in currentDetections) {
-                if (detection.id == 21 || detection.id == 22 || detection.id == 23) {
-                    if (detection.id == 21) {
-                        obeliskOrder = listOf(Color.GREEN, Color.PURPLE, Color.PURPLE)
-                    } else if (detection.id == 23) {
-                        obeliskOrder = listOf(Color.PURPLE, Color.PURPLE, Color.GREEN)
+        if (readyToRead) {
+            if (!orderFound) {
+                val currentDetections: List<AprilTagDetection> = aprilTag.detections
+                for (detection in currentDetections) {
+                    if (detection.id == 21 || detection.id == 22 || detection.id == 23) {
+                        if (detection.id == 21) {
+                            obeliskOrder = listOf(Color.GREEN, Color.PURPLE, Color.PURPLE)
+                        } else if (detection.id == 22) {
+                            obeliskOrder = listOf(Color.PURPLE, Color.GREEN, Color.PURPLE)
+                        } else {
+                            obeliskOrder = listOf(Color.PURPLE, Color.PURPLE, Color.GREEN)
+                        }
+                        orderFound = true
                     }
-                    orderFound = true
                 }
+            } else {
+                visionPortal.stopStreaming()
             }
-        } else {
-            visionPortal.stopStreaming()
         }
     }
 }

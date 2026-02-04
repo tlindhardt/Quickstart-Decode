@@ -31,6 +31,7 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
     }
 
     override fun onStartButtonPressed() {
+        Camera.readyToRead = true
         SequentialGroup(
             // Start Delay
             Flywheel.close,
@@ -63,6 +64,7 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
     }
 
     override fun onInit() {
+        Camera.readyToRead = false
         paths = PathsBuilder.build(isBlue, isTop, follower)
         follower.setStartingPose(paths.startPose)
     }
@@ -79,6 +81,9 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
         Flywheel.off.schedule()
         Fries.intakeAll.schedule()
         Intake.off.schedule()
+        Fries.stopRunning.schedule()
+        Fries.endShooting.schedule()
+        Camera.orderFound = false
     }
 
     val driveAndShoot: (PathChain) -> Command = {

@@ -9,7 +9,6 @@ import dev.nextftc.hardware.impl.ServoEx
 import dev.nextftc.hardware.positionable.SetPosition
 import dev.nextftc.hardware.positionable.SetPositions
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 
 object Fries : SubsystemGroup(ColorSensors, Camera) {
 
@@ -31,7 +30,12 @@ object Fries : SubsystemGroup(ColorSensors, Camera) {
     var stopRunning = InstantCommand { isRunning = true }
 
     var startShooting = InstantCommand { isShooting = true }
-    var endShooting = InstantCommand { isShooting = false }
+    var endShooting = InstantCommand {
+        isShooting = false
+        ColorSensors.leftLock = false
+        ColorSensors.centerLock = false
+        ColorSensors.rightLock = false
+    }
 
     val fireLeft = SetPosition(leftFry, FryConfig.LEFT.fire).requires(this)
     val intakeLeft = SetPosition(leftFry, FryConfig.LEFT.intake).requires(this)
@@ -45,7 +49,7 @@ object Fries : SubsystemGroup(ColorSensors, Camera) {
         rightFry to FryConfig.RIGHT.intake
     ).requires(this)
 
-    val fireAllSorted: (Duration) -> Command = {
+    val fireAllSorted: (Duration) -> Command = { it ->
         isShooting = true
 
         val commands = mutableListOf<Command>()
@@ -93,12 +97,15 @@ object Fries : SubsystemGroup(ColorSensors, Camera) {
         if (isRunning) {
             if (!isShooting) {
                 if (ColorSensors.colorOrder[0] != Color.EMPTY) {
+                    ColorSensors.leftLock = true
                     leftFry.position = FryConfig.LEFT.close
                 }
                 if (ColorSensors.colorOrder[1] != Color.EMPTY) {
+                    ColorSensors.centerLock = true
                     centerFry.position = FryConfig.CENTER.close
                 }
                 if (ColorSensors.colorOrder[2] != Color.EMPTY) {
+                    ColorSensors.rightLock = true
                     rightFry.position = FryConfig.RIGHT.close
                 }
             }

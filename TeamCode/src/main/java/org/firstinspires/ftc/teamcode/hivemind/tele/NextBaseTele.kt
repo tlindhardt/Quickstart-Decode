@@ -28,6 +28,7 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
     }
 
     override fun onStartButtonPressed() {
+        Camera.readyToRead = true
         Fries.startRunning.schedule()
         Gamepads.gamepad1.dpadUp
             .whenBecomesTrue { driverControlled.x++ }
@@ -88,6 +89,7 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
     }
 
     override fun onInit() {
+        Camera.readyToRead = false
         driverControlled = AutoShootPedroDriverControlled(
             Gamepads.gamepad1.leftStickY.negate(),
             Gamepads.gamepad1.leftStickX.negate(),
@@ -112,6 +114,7 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
         Fries.stopRunning.schedule()
         Fries.endShooting.schedule()
         driverControlled.stop(true)
+        Camera.orderFound = false
     }
 
     override fun onWaitForStart() {
