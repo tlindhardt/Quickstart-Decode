@@ -32,6 +32,12 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
 
     override fun onStartButtonPressed() {
         Camera.readyToRead = true
+        val waitTime = 3
+        var current = 0
+        while (!Camera.orderFound && current < waitTime) {
+            Camera.periodic()
+            current++
+        }
         SequentialGroup(
             // Start Delay
             Flywheel.close,
@@ -84,13 +90,14 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
         Fries.stopRunning.schedule()
         Fries.endShooting.schedule()
         Camera.orderFound = false
+        Fries.hasStarted = false
     }
 
     val driveAndShoot: (PathChain) -> Command = {
         SequentialGroup(
             FollowPath(it),
             Delay(0.5.seconds),
-            Fries.fireAllSorted(.2.seconds),
+            Fries.fireAllSorted(0.5.seconds),
         )
     }
 

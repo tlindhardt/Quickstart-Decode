@@ -4,6 +4,7 @@ import dev.nextftc.core.commands.Command
 import dev.nextftc.core.commands.delays.Delay
 import dev.nextftc.core.commands.groups.SequentialGroup
 import dev.nextftc.core.commands.utility.InstantCommand
+import dev.nextftc.core.commands.utility.LambdaCommand
 import dev.nextftc.core.subsystems.SubsystemGroup
 import dev.nextftc.hardware.impl.ServoEx
 import dev.nextftc.hardware.positionable.SetPosition
@@ -22,6 +23,8 @@ object Fries : SubsystemGroup(ColorSensors, Camera) {
     private val centerFry = ServoEx("center_fry")
     private val rightFry = ServoEx("right_fry")
     var isRunning: Boolean = false
+
+    var hasStarted: Boolean = false
 
     var isShooting: Boolean = false
 
@@ -50,41 +53,55 @@ object Fries : SubsystemGroup(ColorSensors, Camera) {
     ).requires(this)
 
     val fireAllSorted: (Duration) -> Command = { it ->
-        isShooting = true
-
-        val commands = mutableListOf<Command>()
-        val positions = listOf(fireLeft, fireCenter, fireRight)
-        val usedIndices = mutableSetOf<Int>()
-
-        for (expectedColor in Camera.obeliskOrder) {
-            // Try to grab the desired color
-            var itemIndex = ColorSensors.colorOrder.indices.firstOrNull {
-                it !in usedIndices && ColorSensors.colorOrder[it] == expectedColor
+        LambdaCommand()
+            .setStart {
+                isShooting = true
+                hasStarted = false
             }
+            .setUpdate {
+                if (!hasStarted) {
+                    hasStarted = true
+                    val commands = mutableListOf<Command>()
+                    val positions = listOf(fireLeft, fireCenter, fireRight)
+                    val usedIndices = mutableSetOf<Int>()
 
-            // If we cant find that color, fall back to the other color
-            if (itemIndex == null) {
-                itemIndex = ColorSensors.colorOrder.indices.firstOrNull {
-                    it !in usedIndices
-                            && ColorSensors.colorOrder[it] != expectedColor
-                            && ColorSensors.colorOrder[it] != Color.EMPTY
+                    for (expectedColor in Camera.obeliskOrder) {
+                        // Try to grab the desired color
+                        var itemIndex = ColorSensors.colorOrder.indices.firstOrNull {
+                            it !in usedIndices && ColorSensors.colorOrder[it] == expectedColor
+                        }
+
+                        // If we cant find that color, fall back to the other color
+                        if (itemIndex == null) {
+                            itemIndex = ColorSensors.colorOrder.indices.firstOrNull {
+                                it !in usedIndices
+                                        && ColorSensors.colorOrder[it] != expectedColor
+                                        && ColorSensors.colorOrder[it] != Color.EMPTY
+                            }
+                        }
+
+                        // If we find it, add the command to the list
+                        if (itemIndex != null) {
+                            commands.add(positions[itemIndex])
+                            usedIndices.add(itemIndex)
+                        }
+                    }
+
+                    SequentialGroup(
+                        *commands.flatMap { cmd ->
+                            listOf(cmd, Delay(it))
+                        }.toTypedArray(),
+                        intakeAll,
+                        endShooting,
+                        InstantCommand {
+                            hasStarted = false
+                        }
+                    ).schedule()
                 }
             }
+            .setIsDone { !isShooting }
+            .requires(this)
 
-            // If we find it, add the command to the list
-            if (itemIndex != null) {
-                commands.add(positions[itemIndex])
-                usedIndices.add(itemIndex)
-            }
-        }
-
-        SequentialGroup(
-            *commands.flatMap { cmd ->
-                listOf(cmd, Delay(it))
-            }.toTypedArray(),
-            intakeAll,
-            endShooting
-        )
     }
 
     override fun initialize() {

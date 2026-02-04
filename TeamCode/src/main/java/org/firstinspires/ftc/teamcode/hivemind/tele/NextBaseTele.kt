@@ -115,6 +115,7 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
         Fries.endShooting.schedule()
         driverControlled.stop(true)
         Camera.orderFound = false
+        Fries.hasStarted = false
     }
 
     override fun onWaitForStart() {
