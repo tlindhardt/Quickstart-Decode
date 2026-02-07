@@ -34,6 +34,7 @@ object Flywheel : Subsystem {
     }
 
     private const val OFF = 0.0
+    private const val AUTONOMOUS = 1000.0
     private const val CLOSE = 1050.0
     private const val MID = 1150.0
     private const val LONG = 1400.0
@@ -65,9 +66,9 @@ object Flywheel : Subsystem {
         setTargetVelocity(OFF)
     }
 
-    val close = InstantCommand {
+    val autonomous = InstantCommand {
         useAuto = false
-        setTargetVelocity(CLOSE)
+        setTargetVelocity(AUTONOMOUS)
     }
 
     val auto: (Boolean) -> Command = {
@@ -105,11 +106,11 @@ object Flywheel : Subsystem {
     }
 
     private fun calculateRpm(distance: Double): Double {
-        if (distance > 120) {
-            return LONG
-        } else if (distance > 90) {
-            return MID
-        }
+//        if (distance > 120) {
+//            return LONG
+//        } else if (distance > 90) {
+//            return MID
+//        }
         return CLOSE
     }
 }

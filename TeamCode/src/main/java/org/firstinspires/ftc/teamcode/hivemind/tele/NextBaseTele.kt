@@ -54,7 +54,7 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
 //            .whenBecomesFalse { Flywheel.off.schedule() }
         Gamepads.gamepad2.cross.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenBecomesTrue {
-                Fries.fireAllSorted(.2.seconds).schedule()
+                Fries.fireAllSorted(false).schedule()
             }
         Gamepads.gamepad2.square.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenBecomesTrue {

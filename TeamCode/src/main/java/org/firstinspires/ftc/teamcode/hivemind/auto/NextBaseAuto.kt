@@ -40,7 +40,7 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
         }
         SequentialGroup(
             // Start Delay
-            Flywheel.close,
+            Flywheel.autonomous,
             Delay(1.seconds),
 
             // Shoot Preload
@@ -97,7 +97,7 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
         SequentialGroup(
             FollowPath(it),
             Delay(0.5.seconds),
-            Fries.fireAllSorted(0.5.seconds),
+            Fries.fireAllSorted(true),
         )
     }
 

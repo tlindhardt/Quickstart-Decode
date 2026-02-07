@@ -10,6 +10,7 @@ import dev.nextftc.hardware.impl.ServoEx
 import dev.nextftc.hardware.positionable.SetPosition
 import dev.nextftc.hardware.positionable.SetPositions
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 object Fries : SubsystemGroup(ColorSensors, Camera) {
 
@@ -52,7 +53,7 @@ object Fries : SubsystemGroup(ColorSensors, Camera) {
         rightFry to FryConfig.RIGHT.intake
     ).requires(this)
 
-    val fireAllSorted: (Duration) -> Command = { it ->
+    val fireAllSorted: (Boolean) -> Command = { it ->
         LambdaCommand()
             .setStart {
                 isShooting = true
@@ -63,12 +64,28 @@ object Fries : SubsystemGroup(ColorSensors, Camera) {
                     hasStarted = true
                     val commands = mutableListOf<Command>()
                     val positions = listOf(fireLeft, fireCenter, fireRight)
+                    val delays = mutableListOf(0.2.seconds, 0.2.seconds, 0.2.seconds)
                     val usedIndices = mutableSetOf<Int>()
 
                     for (expectedColor in Camera.obeliskOrder) {
                         // Try to grab the desired color
                         var itemIndex = ColorSensors.colorOrder.indices.firstOrNull {
                             it !in usedIndices && ColorSensors.colorOrder[it] == expectedColor
+                        }
+
+                        if (itemIndex != null && it) {
+                            if (expectedColor == Color.GREEN) {
+                                delays[itemIndex] = 0.8.seconds
+                            }
+                        }
+
+
+                        // If we cant find that color, fall back empty
+                        if (itemIndex == null) {
+                            itemIndex = ColorSensors.colorOrder.indices.firstOrNull {
+                                it !in usedIndices
+                                        && ColorSensors.colorOrder[it] == Color.EMPTY
+                            }
                         }
 
                         // If we cant find that color, fall back to the other color
@@ -83,14 +100,13 @@ object Fries : SubsystemGroup(ColorSensors, Camera) {
                         // If we find it, add the command to the list
                         if (itemIndex != null) {
                             commands.add(positions[itemIndex])
+                            commands.add(Delay(delays[itemIndex]))
                             usedIndices.add(itemIndex)
                         }
                     }
 
                     SequentialGroup(
-                        *commands.flatMap { cmd ->
-                            listOf(cmd, Delay(it))
-                        }.toTypedArray(),
+                        *commands.toTypedArray(),
                         intakeAll,
                         endShooting,
                         InstantCommand {
