@@ -37,7 +37,7 @@ object Flywheel : Subsystem {
     private const val AUTONOMOUS = 1000.0
     private const val CLOSE = 1050.0
     private const val MID = 1150.0
-    private const val LONG = 1400.0
+    private const val LONG = 1320.0
 
     @JvmField
     var velPidCoefficients = PIDCoefficients(0.007, 0.0, 0.0)  // P, I, D for velocity PID
@@ -69,6 +69,11 @@ object Flywheel : Subsystem {
     val autonomous = InstantCommand {
         useAuto = false
         setTargetVelocity(AUTONOMOUS)
+    }
+
+    val long = InstantCommand {
+        useAuto = false
+        setTargetVelocity(LONG)
     }
 
     val auto: (Boolean) -> Command = {
