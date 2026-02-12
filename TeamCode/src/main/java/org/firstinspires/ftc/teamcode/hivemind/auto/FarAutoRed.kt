@@ -44,14 +44,16 @@ class FarAutoRed : NextFTCOpMode() {
 
     override fun onStartButtonPressed() {
         val startPose = Pose(39.5, 8.5, Math.toRadians(90.0)).mirror()
-        val shootPose = Pose(50.0, 12.5, Math.toRadians(105.5)).mirror()
+        val shootPose = Pose(50.0, 12.5, Math.toRadians(108.5)).mirror()
         val secondShootPose = Pose(50.0, 12.5, Math.toRadians(108.5)).mirror()
-        val interPose = Pose(30.0, 6.5, Math.toRadians(180.0)).mirror()
-        val scoopPose = Pose(10.0, 6.5, Math.toRadians(180.0)).mirror()
+        val interPose = Pose(50.0, 22.5, Math.toRadians(180.0)).mirror()
+        val secondInterPose = Pose(50.0, 12.5, Math.toRadians(180.0)).mirror()
+        val scoopPose = Pose(18.0, 6.5, Math.toRadians(180.0)).mirror()
         val endPose = Pose(38.0, 12.5, Math.toRadians(180.0)).mirror()
         val startChain = buildPath(startPose, shootPose)
         val interChain = buildPath(shootPose, interPose)
-        val scoopChain = buildPath(interPose, scoopPose)
+        val secondInterChain = buildPath(interPose, secondInterPose)
+        val scoopChain = buildPath(secondInterPose, scoopPose)
         val scoopShootChain = buildPath(scoopPose, secondShootPose)
         val endChain = buildPath(shootPose, endPose)
         follower.setStartingPose(startPose)
@@ -75,11 +77,12 @@ class FarAutoRed : NextFTCOpMode() {
             // Gather base
             Intake.forward,
             FollowPath(interChain),
-            FollowPath(scoopChain),
-            Intake.off,
+            FollowPath(secondInterChain),
+            FollowPath(scoopChain, true, 0.7),
 
             // Shoot base
             FollowPath(scoopShootChain, true, 0.7),
+            Intake.off,
             Delay(0.1.seconds),
             Fries.fireLeft,
             Delay(0.3.seconds),
@@ -93,11 +96,13 @@ class FarAutoRed : NextFTCOpMode() {
             Delay(1.seconds),// Gather base
             Intake.forward,
             FollowPath(interChain),
-            FollowPath(scoopChain),
+            FollowPath(secondInterChain),
+            FollowPath(scoopChain, true, 0.7),
             Intake.off,
 
             // Shoot base
             FollowPath(scoopShootChain, true, 0.7),
+            Intake.off,
             Delay(0.1.seconds),
             Fries.fireLeft,
             Delay(0.3.seconds),
@@ -111,11 +116,12 @@ class FarAutoRed : NextFTCOpMode() {
             Delay(1.seconds),// Gather base
             Intake.forward,
             FollowPath(interChain),
-            FollowPath(scoopChain),
-            Intake.off,
+            FollowPath(secondInterChain),
+            FollowPath(scoopChain, true, 0.7),
 
             // Shoot base
             FollowPath(scoopShootChain, true, 0.7),
+            Intake.off,
             Delay(0.1.seconds),
             Fries.fireLeft,
             Delay(0.3.seconds),

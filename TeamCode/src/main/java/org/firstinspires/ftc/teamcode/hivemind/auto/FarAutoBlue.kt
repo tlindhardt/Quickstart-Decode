@@ -46,7 +46,7 @@ class FarAutoBlue : NextFTCOpMode() {
         val startPose = Pose(39.5, 8.5, Math.toRadians(90.0))
         val shootPose = Pose(50.0, 12.5, Math.toRadians(105.5))
         val secondShootPose = Pose(50.0, 12.5, Math.toRadians(108.5))
-        val interPose = Pose(30.0, 6.5, Math.toRadians(180.0))
+        val interPose = Pose(40.0, 6.5, Math.toRadians(180.0))
         val scoopPose = Pose(10.0, 6.5, Math.toRadians(180.0))
         val endPose = Pose(38.0, 12.5, Math.toRadians(180.0))
         val startChain = buildPath(startPose, shootPose)
