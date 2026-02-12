@@ -4,6 +4,7 @@ import com.pedropathing.geometry.BezierLine
 import com.pedropathing.geometry.Pose
 import com.pedropathing.paths.PathChain
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import dev.nextftc.core.commands.CommandManager
 import dev.nextftc.core.commands.delays.Delay
 import dev.nextftc.core.commands.groups.SequentialGroup
 import dev.nextftc.core.components.BindingsComponent
@@ -42,13 +43,16 @@ class FarAutoBlue : NextFTCOpMode() {
 
 
     override fun onStartButtonPressed() {
-        val startPose = Pose(48.0, 8.5, Math.toRadians(90.0))
-        val shootPose = Pose(50.0, 12.5, Math.toRadians(103.5))
-        val scoopPose = Pose(10.0, 8.5, Math.toRadians(180.0))
+        val startPose = Pose(39.5, 8.5, Math.toRadians(90.0))
+        val shootPose = Pose(50.0, 12.5, Math.toRadians(105.5))
+        val secondShootPose = Pose(50.0, 12.5, Math.toRadians(108.5))
+        val interPose = Pose(30.0, 6.5, Math.toRadians(180.0))
+        val scoopPose = Pose(10.0, 6.5, Math.toRadians(180.0))
         val endPose = Pose(38.0, 12.5, Math.toRadians(180.0))
         val startChain = buildPath(startPose, shootPose)
-        val scoopChain = buildPath(shootPose, scoopPose)
-        val scoopShootChain = buildPath(scoopPose, shootPose)
+        val interChain = buildPath(shootPose, interPose)
+        val scoopChain = buildPath(interPose, scoopPose)
+        val scoopShootChain = buildPath(scoopPose, secondShootPose)
         val endChain = buildPath(shootPose, endPose)
         follower.setStartingPose(startPose)
 
@@ -70,11 +74,12 @@ class FarAutoBlue : NextFTCOpMode() {
 
             // Gather base
             Intake.forward,
+            FollowPath(interChain),
             FollowPath(scoopChain),
             Intake.off,
 
             // Shoot base
-            FollowPath(scoopShootChain),
+            FollowPath(scoopShootChain, true, 0.7),
             Delay(0.1.seconds),
             Fries.fireLeft,
             Delay(0.3.seconds),
@@ -87,11 +92,12 @@ class FarAutoBlue : NextFTCOpMode() {
             // Wait for clear
             Delay(1.seconds),// Gather base
             Intake.forward,
+            FollowPath(interChain),
             FollowPath(scoopChain),
             Intake.off,
 
             // Shoot base
-            FollowPath(scoopShootChain),
+            FollowPath(scoopShootChain, true, 0.7),
             Delay(0.1.seconds),
             Fries.fireLeft,
             Delay(0.3.seconds),
@@ -104,11 +110,12 @@ class FarAutoBlue : NextFTCOpMode() {
             // Wait for clear
             Delay(1.seconds),// Gather base
             Intake.forward,
+            FollowPath(interChain),
             FollowPath(scoopChain),
             Intake.off,
 
             // Shoot base
-            FollowPath(scoopShootChain),
+            FollowPath(scoopShootChain, true, 0.7),
             Delay(0.1.seconds),
             Fries.fireLeft,
             Delay(0.3.seconds),
@@ -143,5 +150,6 @@ class FarAutoBlue : NextFTCOpMode() {
         Fries.endShooting.schedule()
         Camera.orderFound = false
         Fries.hasStarted = false
+        CommandManager.cancelAll()
     }
 }

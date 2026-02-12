@@ -13,7 +13,7 @@ open class BlueBottomPoses : Poses() {
     }
 
     override fun getBumpPose(): Pose {
-        return Pose(17.0, 76.0, Math.toRadians(270.0))
+        return Pose(17.0, 77.0, Math.toRadians(270.0))
     }
 
     override fun getShootPose(): Pose {
@@ -21,7 +21,7 @@ open class BlueBottomPoses : Poses() {
     }
 
     override fun getTopSpikeStartPose(): Pose {
-        return Pose(26.5, 102.0, Math.toRadians(270.0))
+        return Pose(26.5, 104.0, Math.toRadians(270.0))
     }
 
     override fun getTopSpikeEndPose(): Pose {
@@ -29,7 +29,7 @@ open class BlueBottomPoses : Poses() {
     }
 
     override fun getCenterSpikeStartPose(): Pose {
-        return Pose(26.5, 78.0, Math.toRadians(270.0))
+        return Pose(26.5, 80.0, Math.toRadians(270.0))
     }
 
     override fun getCenterSpikeEndPose(): Pose {
@@ -37,7 +37,7 @@ open class BlueBottomPoses : Poses() {
     }
 
     override fun getBottomSpikeStartPose(): Pose {
-        return Pose(26.5, 54.0, Math.toRadians(270.0))
+        return Pose(26.5, 56.0, Math.toRadians(270.0))
     }
 
     override fun getBottomSpikeEndPose(): Pose {

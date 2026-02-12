@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.hivemind.auto
 
 import com.pedropathing.paths.PathChain
 import dev.nextftc.core.commands.Command
+import dev.nextftc.core.commands.CommandManager
 import dev.nextftc.core.commands.delays.Delay
 import dev.nextftc.core.commands.groups.SequentialGroup
 import dev.nextftc.core.components.BindingsComponent
@@ -87,6 +88,7 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
         Fries.endShooting.schedule()
         Camera.orderFound = false
         Fries.hasStarted = false
+        CommandManager.cancelAll()
     }
 
     val driveAndShoot: (PathChain) -> Command = {
