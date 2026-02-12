@@ -5,7 +5,7 @@ import com.pedropathing.geometry.Pose
 open class BlueBottomPoses : Poses() {
 
     override fun getStartPose(): Pose {
-        return Pose(63.5, 8.5, Math.toRadians(90.0))
+        return Pose(61.5, 8.5, Math.toRadians(90.0))
     }
 
     override fun getEndPose(): Pose {
@@ -13,35 +13,35 @@ open class BlueBottomPoses : Poses() {
     }
 
     override fun getBumpPose(): Pose {
-        return Pose(19.5, 74.0, Math.toRadians(270.0))
+        return Pose(17.0, 76.0, Math.toRadians(270.0))
     }
 
     override fun getShootPose(): Pose {
-        return Pose(54.0, 98.0, Math.toRadians(144.0))
+        return Pose(48.0, 98.0, Math.toRadians(146.0))
     }
 
     override fun getTopSpikeStartPose(): Pose {
-        return Pose(25.0, 100.0, Math.toRadians(270.0))
+        return Pose(26.5, 102.0, Math.toRadians(270.0))
     }
 
     override fun getTopSpikeEndPose(): Pose {
-        return Pose(25.0, 84.0, Math.toRadians(270.0))
+        return Pose(26.5, 84.0, Math.toRadians(270.0))
     }
 
     override fun getCenterSpikeStartPose(): Pose {
-        return Pose(25.0, 76.0, Math.toRadians(270.0))
+        return Pose(26.5, 78.0, Math.toRadians(270.0))
     }
 
     override fun getCenterSpikeEndPose(): Pose {
-        return Pose(25.0, 60.0, Math.toRadians(270.0))
+        return Pose(26.5, 60.0, Math.toRadians(270.0))
     }
 
     override fun getBottomSpikeStartPose(): Pose {
-        return Pose(25.0, 52.0, Math.toRadians(270.0))
+        return Pose(26.5, 54.0, Math.toRadians(270.0))
     }
 
     override fun getBottomSpikeEndPose(): Pose {
-        return Pose(25.0, 36.0, Math.toRadians(270.0))
+        return Pose(26.5, 36.0, Math.toRadians(270.0))
     }
 
     override fun getLoadStartPose(): Pose {

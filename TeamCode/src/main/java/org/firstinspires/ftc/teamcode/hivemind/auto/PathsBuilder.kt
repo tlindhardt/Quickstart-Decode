@@ -69,7 +69,7 @@ class PathsBuilder {
 
         private fun buildPath(startPose: Pose, endPose: Pose, follower: Follower): PathChain {
             return follower.pathBuilder()
-                .setGlobalDeceleration()
+//                .setGlobalDeceleration()
                 .addPath(BezierLine(startPose, endPose))
                 .setLinearHeadingInterpolation(startPose.heading, endPose.heading)
                 .build()

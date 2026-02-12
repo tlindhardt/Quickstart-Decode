@@ -9,7 +9,6 @@ import dev.nextftc.core.subsystems.SubsystemGroup
 import dev.nextftc.hardware.impl.ServoEx
 import dev.nextftc.hardware.positionable.SetPosition
 import dev.nextftc.hardware.positionable.SetPositions
-import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 object Fries : SubsystemGroup(ColorSensors, Camera) {
@@ -67,18 +66,22 @@ object Fries : SubsystemGroup(ColorSensors, Camera) {
                     val delays = mutableListOf(0.2.seconds, 0.2.seconds, 0.2.seconds)
                     val usedIndices = mutableSetOf<Int>()
 
-                    for (expectedColor in Camera.obeliskOrder) {
+                    for ((obeliskIndex, expectedColor) in Camera.obeliskOrder.withIndex()) {
                         // Try to grab the desired color
                         var itemIndex = ColorSensors.colorOrder.indices.firstOrNull {
                             it !in usedIndices && ColorSensors.colorOrder[it] == expectedColor
                         }
 
-                        if (itemIndex != null && it) {
-                            if (expectedColor == Color.GREEN) {
-                                delays[itemIndex] = 0.8.seconds
+                        if (it && itemIndex != null) {
+                            // Set 1s delay if current is Green OR next obelisk item is Green
+                            if (itemIndex < 3) {  // Changed from < 2 to < 3 (i.e., all positions)
+                                if (expectedColor == Color.GREEN ||
+                                    (obeliskIndex + 1 < Camera.obeliskOrder.size &&
+                                            Camera.obeliskOrder[obeliskIndex + 1] == Color.GREEN)) {
+                                    delays[itemIndex] = 0.8.seconds
+                                }
                             }
                         }
-
 
                         // If we cant find that color, fall back empty
                         if (itemIndex == null) {

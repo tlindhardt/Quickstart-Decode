@@ -137,7 +137,7 @@ class TuningController {
 
     companion object {
         var MOTOR_TICKS_PER_REV: Double = 28.0
-        var MOTOR_MAX_RPM: Double = 6000.0
+        var MOTOR_MAX_RPM: Double = 4000.0
         var MOTOR_GEAR_RATIO: Double = 1.0 // output (wheel) speed / input (motor) speed
 
         var TESTING_MAX_SPEED: Double = 0.9 * MOTOR_MAX_RPM

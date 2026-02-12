@@ -41,7 +41,7 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
         SequentialGroup(
             // Start Delay
             Flywheel.autonomous,
-            Delay(1.seconds),
+            Delay(0.5.seconds),
 
             // Shoot Preload
             driveAndShoot(paths.initialShootPath),
@@ -59,10 +59,6 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
             // Shoot Bottom Spike
             driveAndLoad(paths.bottomSpike),
             driveAndShoot(paths.bottomSpikeShootPath),
-
-            //Shoot Load
-//            driveAndLoad(paths.load),
-//            driveAndShoot(paths.loadShootPath),
 
             FollowPath(paths.endPath),
             Flywheel.off
@@ -104,7 +100,7 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
     val driveAndLoad: (Pair<PathChain, PathChain>) -> Command = {
         SequentialGroup(
             FollowPath(it.first),
-            Delay(0.2.seconds),
+            Delay(0.1.seconds),
             Intake.forward,
             FollowPath(it.second),
             Intake.off,
