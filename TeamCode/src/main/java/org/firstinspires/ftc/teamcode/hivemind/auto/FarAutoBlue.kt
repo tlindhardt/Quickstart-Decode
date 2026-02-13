@@ -47,7 +47,7 @@ class FarAutoBlue : NextFTCOpMode() {
         val shootPose = Pose(50.0, 12.5, Math.toRadians(105.5))
         val secondShootPose = Pose(50.0, 12.5, Math.toRadians(108.5))
         val interPose = Pose(30.0, 6.5, Math.toRadians(180.0))
-        val scoopPose = Pose(10.0, 6.5, Math.toRadians(180.0))
+        val scoopPose = Pose(13.5, 6.5, Math.toRadians(180.0))
         val endPose = Pose(38.0, 12.5, Math.toRadians(180.0))
         val startChain = buildPath(startPose, shootPose)
         val interChain = buildPath(shootPose, interPose)
@@ -76,10 +76,10 @@ class FarAutoBlue : NextFTCOpMode() {
             Intake.forward,
             FollowPath(interChain),
             FollowPath(scoopChain),
-            Intake.off,
 
             // Shoot base
             FollowPath(scoopShootChain, true, 0.7),
+            Intake.off,
             Delay(0.1.seconds),
             Fries.fireLeft,
             Delay(0.3.seconds),
@@ -94,10 +94,10 @@ class FarAutoBlue : NextFTCOpMode() {
             Intake.forward,
             FollowPath(interChain),
             FollowPath(scoopChain),
-            Intake.off,
 
             // Shoot base
             FollowPath(scoopShootChain, true, 0.7),
+            Intake.off,
             Delay(0.1.seconds),
             Fries.fireLeft,
             Delay(0.3.seconds),
@@ -112,10 +112,10 @@ class FarAutoBlue : NextFTCOpMode() {
             Intake.forward,
             FollowPath(interChain),
             FollowPath(scoopChain),
-            Intake.off,
 
             // Shoot base
             FollowPath(scoopShootChain, true, 0.7),
+            Intake.off,
             Delay(0.1.seconds),
             Fries.fireLeft,
             Delay(0.3.seconds),
