@@ -65,8 +65,8 @@ class AutoShootPedroDriverControlled @JvmOverloads constructor(
             strafe *= -1
         }
 
-        ActiveOpMode.telemetry.addData("x", x)
-        ActiveOpMode.telemetry.addData("y", y)
+//        ActiveOpMode.telemetry.addData("x", x)
+//        ActiveOpMode.telemetry.addData("y", y)
 
         follower.setTeleOpDrive(drive, strafe, turn, robotCentric)
     }

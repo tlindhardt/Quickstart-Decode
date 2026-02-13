@@ -18,8 +18,8 @@ object Intake : SubsystemGroup(ColorSensors) {
     }
 
     override fun periodic() {
-        if (ColorSensors.colorOrder.filter { it != Color.EMPTY }.size == 3) {
-            motor.power = OFF
-        }
+//        if (ColorSensors.colorOrder.filter { it != Color.EMPTY }.size == 3) {
+//            motor.power = OFF
+//        }
     }
 }

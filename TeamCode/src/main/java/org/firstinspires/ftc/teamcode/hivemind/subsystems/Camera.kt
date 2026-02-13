@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hivemind.subsystems
 
 import dev.nextftc.core.subsystems.Subsystem
+import dev.nextftc.ftc.ActiveOpMode
 import dev.nextftc.ftc.ActiveOpMode.hardwareMap
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.vision.VisionPortal
@@ -22,6 +23,9 @@ object Camera : Subsystem {
     }
 
     override fun periodic() {
+        ActiveOpMode.telemetry.addData("readToRun", readyToRead)
+        ActiveOpMode.telemetry.addData("orderFound", orderFound)
+        ActiveOpMode.telemetry.addData("order", obeliskOrder)
         if (readyToRead) {
             if (!orderFound) {
                 val currentDetections: List<AprilTagDetection> = aprilTag.detections

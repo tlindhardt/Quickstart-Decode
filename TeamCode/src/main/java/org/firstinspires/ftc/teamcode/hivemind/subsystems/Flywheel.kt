@@ -40,10 +40,12 @@ object Flywheel : Subsystem {
     private const val LONG = 1350.0
 
     @JvmField
-    var velPidCoefficients = PIDCoefficients(0.01, 0.0, 0.0)  // P, I, D for velocity PID
+    var velPidCoefficients = PIDCoefficients(
+        0.01, 0.0, 0.0)
 
     @JvmField
-    var basicFFCoefficients = BasicFeedforwardParameters(0.0005, 0.02, 0.0)  // kS, kV, kA
+    var basicFFCoefficients = BasicFeedforwardParameters(
+        0.0005, 0.02, 0.0)
 
     var flywheel = MotorGroup(
         MotorEx("flywheel_left"),

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.hivemind.auto
 
 import com.pedropathing.paths.PathChain
+import com.qualcomm.robotcore.util.ElapsedTime
 import dev.nextftc.core.commands.Command
 import dev.nextftc.core.commands.CommandManager
 import dev.nextftc.core.commands.delays.Delay
@@ -20,6 +21,7 @@ import kotlin.time.Duration.Companion.seconds
 
 abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOpMode() {
 
+    var elapsedTime: ElapsedTime = ElapsedTime()
     lateinit var paths: Paths
 
     init {
@@ -33,11 +35,15 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
 
     override fun onStartButtonPressed() {
         Camera.readyToRead = true
-        val waitTime = 3
-        var current = 0
-        while (!Camera.orderFound && current < waitTime) {
+        elapsedTime = ElapsedTime()
+        var previousTime = elapsedTime.milliseconds()
+        var loopCount = 0
+        while (!Camera.orderFound && loopCount <= 10) {
             Camera.periodic()
-            current++
+            if (elapsedTime.milliseconds() > previousTime + 100) {
+                loopCount++
+                previousTime = elapsedTime.milliseconds()
+            }
         }
         SequentialGroup(
             // Start Delay

@@ -13,7 +13,7 @@ open class BlueBottomPoses : Poses() {
     }
 
     override fun getBumpPose(): Pose {
-        return Pose(17.0, 77.0, Math.toRadians(270.0))
+        return Pose(17.0, 78.0, Math.toRadians(270.0))
     }
 
     override fun getShootPose(): Pose {
