@@ -14,9 +14,9 @@ import kotlin.time.Duration.Companion.seconds
 object Fries : SubsystemGroup(ColorSensors, Camera) {
 
     enum class FryConfig(val fire: Double, val close: Double, val intake: Double) {
-        LEFT(0.27, 0.15, 0.05),
-        CENTER(0.74, 0.86, 0.96),
-        RIGHT(0.77, 0.89, 0.99),
+        LEFT(0.31, 0.17, 0.06),
+        CENTER(0.69, 0.85, 0.96),
+        RIGHT(0.73, 0.87, 0.98),
     }
 
     private val leftFry = ServoEx("left_fry")

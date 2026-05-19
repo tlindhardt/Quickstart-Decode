@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.hivemind.subsystems
 
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor
 import dev.nextftc.core.subsystems.Subsystem
+import dev.nextftc.ftc.ActiveOpMode
 import dev.nextftc.ftc.ActiveOpMode.hardwareMap
 
 object ColorSensors : Subsystem {
@@ -27,8 +28,9 @@ object ColorSensors : Subsystem {
     }
 
     override fun periodic() {
-        val leftColors = leftSensor.normalizedColors
         if (!leftLock) {
+            val leftColors = leftSensor.normalizedColors
+            ActiveOpMode.telemetry.addData("left", leftColors.alpha)
             if (leftColors.alpha > .08) {
                 if (leftColors.green > leftColors.blue) {
                     colorOrder[0] = Color.GREEN
@@ -42,6 +44,7 @@ object ColorSensors : Subsystem {
 
         if (!centerLock) {
             val centerColors = centerSensor.normalizedColors
+            ActiveOpMode.telemetry.addData("center", centerColors.alpha)
             if (centerColors.alpha > .08) {
                 if (centerColors.green > centerColors.blue) {
                     colorOrder[1] = Color.GREEN
@@ -55,6 +58,7 @@ object ColorSensors : Subsystem {
 
         if (!rightLock) {
             val rightColors = rightSensor.normalizedColors
+            ActiveOpMode.telemetry.addData("right", rightColors.alpha)
             if (rightColors.alpha > .08) {
                 if (rightColors.green > rightColors.blue) {
                     colorOrder[2] = Color.GREEN

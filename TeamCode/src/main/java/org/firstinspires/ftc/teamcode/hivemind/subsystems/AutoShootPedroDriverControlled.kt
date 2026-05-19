@@ -68,7 +68,7 @@ class AutoShootPedroDriverControlled @JvmOverloads constructor(
 //        ActiveOpMode.telemetry.addData("x", x)
 //        ActiveOpMode.telemetry.addData("y", y)
 
-        follower.setTeleOpDrive(drive, strafe, turn, robotCentric)
+        follower.setTeleOpDrive(drive, strafe, turn * 0.55, robotCentric)
     }
 //
 //    private fun getDepot(pose: Pose, isBlue: Boolean): Depot {

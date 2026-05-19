@@ -1,17 +1,12 @@
 package org.firstinspires.ftc.teamcode.hivemind.tele
 
-import com.pedropathing.geometry.BezierLine
-import com.pedropathing.geometry.Pose
 import dev.nextftc.bindings.BindingManager
 import dev.nextftc.core.commands.CommandManager
 import dev.nextftc.core.commands.delays.Delay
 import dev.nextftc.core.commands.groups.SequentialGroup
-import dev.nextftc.core.commands.utility.InstantCommand
 import dev.nextftc.core.components.BindingsComponent
 import dev.nextftc.core.components.SubsystemComponent
-import dev.nextftc.extensions.pedro.FollowPath
 import dev.nextftc.extensions.pedro.PedroComponent
-import dev.nextftc.extensions.pedro.PedroComponent.Companion.follower
 import dev.nextftc.ftc.ActiveOpMode
 import dev.nextftc.ftc.Gamepads
 import dev.nextftc.ftc.NextFTCOpMode
@@ -34,6 +29,15 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
     }
 
     override fun onStartButtonPressed() {
+        driverControlled = AutoShootPedroDriverControlled(
+            Gamepads.gamepad1.leftStickY.negate(),
+            Gamepads.gamepad1.leftStickX.negate(),
+            Gamepads.gamepad1.rightStickX.negate(),
+            Gamepads.gamepad1.cross,
+            false,
+            isBlue
+        )
+        driverControlled()
         Camera.readyToRead = true
         Fries.startRunning.schedule()
 //
@@ -81,7 +85,18 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
             .whenBecomesFalse { Flywheel.off.schedule() }
         Gamepads.gamepad2.cross.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenBecomesTrue {
-                Fries.fireAllSorted(false).schedule()
+                SequentialGroup(
+                    Fries.startShooting,
+                    Fries.fireLeft,
+                    Delay(0.1.seconds),
+                    Fries.fireCenter,
+                    Delay(0.1.seconds),
+                    Fries.fireRight,
+                    Delay(0.2.seconds),
+                    Fries.intakeAll,
+                    Fries.endShooting
+                ).schedule()
+//                Fries.fireAllSorted(false).schedule()
             }
         Gamepads.gamepad2.square.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenBecomesTrue {
@@ -117,15 +132,6 @@ abstract class NextBaseTele(val isBlue: Boolean) : NextFTCOpMode() {
 
     override fun onInit() {
         Camera.readyToRead = false
-        driverControlled = AutoShootPedroDriverControlled(
-            Gamepads.gamepad1.leftStickY.negate(),
-            Gamepads.gamepad1.leftStickX.negate(),
-            Gamepads.gamepad1.rightStickX.negate(),
-            Gamepads.gamepad1.cross,
-            false,
-            isBlue
-        )
-        driverControlled()
     }
 
     override fun onUpdate() {
