@@ -14,8 +14,10 @@ class AutoShootPedroDriverControlled @JvmOverloads constructor(
     strafePower: Supplier<Double>,
     turnPower: Supplier<Double>,
     private val autoTracking: Supplier<Boolean>,
+    private val resetPinpoint: Supplier<Boolean>,
     private val robotCentric: Boolean,
-    val isBlue: Boolean
+    val isBlue: Boolean,
+    val isCalibration: Boolean
 ) : DriverControlledCommand(drivePower, strafePower, turnPower) {
 
     val autoRotationMultiplier = 0.5
@@ -31,16 +33,31 @@ class AutoShootPedroDriverControlled @JvmOverloads constructor(
 //    }
 
     override fun start() {
-        if (isBlue) {
-            follower.setStartingPose(BlueBottomPoses().getEndPose())
+        if (isCalibration) {
+            if (isBlue) {
+                follower.setStartingPose(BlueBottomPoses().getStartPose())
+            } else {
+                follower.setStartingPose(RedBottomPoses().getStartPose())
+            }
         } else {
-            follower.setStartingPose(RedBottomPoses().getEndPose())
+            if (isBlue) {
+                follower.setStartingPose(BlueBottomPoses().getEndPose())
+            } else {
+                follower.setStartingPose(RedBottomPoses().getEndPose())
+            }
         }
         follower.startTeleopDrive()
     }
 
     override fun calculateAndSetPowers(powers: DoubleArray) {
         var (drive, strafe, turn) = powers
+        if (resetPinpoint.get()) {
+            var heading = RedBottomPoses().getEndPose().heading
+            if (isBlue) {
+                heading = BlueBottomPoses().getEndPose().heading
+            }
+            follower.pose = Pose(follower.pose.x, follower.pose.y, heading)
+        }
 
 //        if (autoTracking.get()) {
 ////            val depot = getDepot(follower.pose, isBlue)

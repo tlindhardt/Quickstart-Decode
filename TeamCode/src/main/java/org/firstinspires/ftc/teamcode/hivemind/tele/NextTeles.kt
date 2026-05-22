@@ -10,3 +10,9 @@ class BlueFieldCentricHivemindTeleOp : NextBaseTele(isBlue = true)
 
 @TeleOp(name = "Red - Teleop")
 class RedFieldCentricHivemindTeleOp : NextBaseTele(isBlue = false)
+
+@TeleOp(name = "Blue - Calibration")
+class BlueCalibrationTeleop : NextBaseTele(isBlue = true, isCalibration = true)
+
+@TeleOp(name = "Red - Calibration")
+class RedCalibrationTeleop : NextBaseTele(isBlue = true, isCalibration = true)

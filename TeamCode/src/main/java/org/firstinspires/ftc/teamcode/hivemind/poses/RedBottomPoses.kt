@@ -17,9 +17,14 @@ open class RedBottomPoses : BlueBottomPoses() {
         return Pose(bumpPose.x + 1, bumpPose.y, bumpPose.heading)
     }
 
+    override fun getPrimaryShootPose(): Pose {
+        val shootPose = super.getShootPose().mirror()
+        return Pose(shootPose.x, shootPose.y, Math.toRadians(38.5))
+    }
+
     override fun getShootPose(): Pose {
         val shootPose = super.getShootPose().mirror()
-        return Pose(shootPose.x, shootPose.y, Math.toRadians(37.0))
+        return Pose(shootPose.x, shootPose.y, Math.toRadians(38.5))
     }
 
     override fun getTopSpikeStartPose(): Pose {

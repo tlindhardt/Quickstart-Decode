@@ -76,6 +76,7 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
         Camera.readyToRead = false
         paths = PathsBuilder.build(isBlue, isTop, follower)
         follower.setStartingPose(paths.startPose)
+        Fries.startRunning.schedule()
     }
 
     override fun onUpdate() {

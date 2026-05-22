@@ -6,6 +6,7 @@ abstract class Poses {
     abstract fun getStartPose(): Pose
     abstract fun getEndPose(): Pose
     abstract fun getBumpPose(): Pose
+    abstract fun getPrimaryShootPose(): Pose
     abstract fun getShootPose(): Pose
     abstract fun getTopSpikeStartPose(): Pose
     abstract fun getTopSpikeEndPose(): Pose

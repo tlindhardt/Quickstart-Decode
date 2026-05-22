@@ -18,11 +18,11 @@ class PathsBuilder {
             val paths = getPaths(isBlue, isTop)
             return Paths(
                 paths.getStartPose(),
-                buildPath(paths.getStartPose(), paths.getShootPose(), follower),
+                buildPath(paths.getStartPose(), paths.getPrimaryShootPose(), follower),
 
                 // Top Spike
                 Pair(
-                    buildPath(paths.getShootPose(), paths.getTopSpikeStartPose(), follower),
+                    buildPath(paths.getPrimaryShootPose(), paths.getTopSpikeStartPose(), follower),
                     buildPath(paths.getTopSpikeStartPose(), paths.getTopSpikeEndPose(), follower)
                 ),
                 buildPath(paths.getBumpPose(), paths.getShootPose(), follower),
