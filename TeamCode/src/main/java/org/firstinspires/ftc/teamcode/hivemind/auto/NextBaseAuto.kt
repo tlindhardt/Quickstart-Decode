@@ -101,7 +101,7 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
     val driveAndShoot: (PathChain) -> Command = {
         SequentialGroup(
             FollowPath(it),
-            Delay(0.5.seconds),
+//            Delay(0.5.seconds),
             Fries.fireAllSorted(true),
         )
     }
@@ -112,6 +112,7 @@ abstract class NextBaseAuto(var isBlue: Boolean, var isTop: Boolean) : NextFTCOp
             Delay(0.1.seconds),
             Intake.forward,
             FollowPath(it.second),
+            Delay(0.1.seconds),
             Intake.off,
         )
     }

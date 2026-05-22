@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.hivemind.tele
 import dev.nextftc.bindings.BindingManager
 import dev.nextftc.core.commands.CommandManager
 import dev.nextftc.core.commands.delays.Delay
+import dev.nextftc.core.commands.groups.ParallelGroup
 import dev.nextftc.core.commands.groups.SequentialGroup
 import dev.nextftc.core.components.BindingsComponent
 import dev.nextftc.core.components.SubsystemComponent
@@ -76,6 +77,16 @@ abstract class NextBaseTele(val isBlue: Boolean, val isCalibration: Boolean = fa
 //        Gamepads.gamepad1.dpadLeft
 //            .whenBecomesTrue { driverControlled.y-- }
 
+
+//        Gamepads.gamepad1.dpadLeft
+//            .whenBecomesTrue {
+//                SequentialGroup(
+//                    Fries.fireLeft,
+//                    Fries.fireRight,
+//                    Fries.fireCenter
+//                ).schedule()
+//            }
+
         // SHOOTER CONTROLS
         Gamepads.gamepad2.rightBumper
             .whenBecomesTrue { Intake.forward.schedule() }
@@ -94,12 +105,23 @@ abstract class NextBaseTele(val isBlue: Boolean, val isCalibration: Boolean = fa
                     Delay(0.1.seconds),
                     Fries.fireCenter,
                     Delay(0.1.seconds),
-                    Fries.fireRight,
-                    Delay(0.2.seconds),
+
+                    // Add in an extra fire for center at the same time as the right fry
+                    ParallelGroup(
+                        SequentialGroup(
+                            Fries.intakeCenter,
+                            Delay(0.1.seconds),
+                            Fries.fireCenter,
+                            Delay(0.1.seconds),
+                        ),
+                        SequentialGroup(
+                            Fries.fireRight,
+                            Delay(0.2.seconds)
+                        )
+                    ),
                     Fries.intakeAll,
                     Fries.endShooting
                 ).schedule()
-//                Fries.fireAllSorted(false).schedule()
             }
         Gamepads.gamepad2.square.and(Gamepads.gamepad2.rightTrigger.greaterThan(0.3))
             .whenBecomesTrue {

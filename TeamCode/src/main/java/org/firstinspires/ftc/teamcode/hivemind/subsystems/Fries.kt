@@ -105,6 +105,14 @@ object Fries : SubsystemGroup(ColorSensors, Camera) {
                             commands.add(positions[itemIndex])
                             commands.add(Delay(delays[itemIndex]))
                             usedIndices.add(itemIndex)
+                            // Add in an extra fire for center in case we stick
+                            if (itemIndex == 1) {
+                                commands.add(intakeCenter)
+                                commands.add(Delay(0.2.seconds))
+                                commands.add(fireCenter)
+                                commands.add(Delay(0.1.seconds))
+                                usedIndices.add(itemIndex)
+                            }
                         }
                     }
 

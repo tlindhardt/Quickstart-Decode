@@ -6,6 +6,7 @@ import com.pedropathing.paths.PathChain
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import dev.nextftc.core.commands.CommandManager
 import dev.nextftc.core.commands.delays.Delay
+import dev.nextftc.core.commands.groups.ParallelGroup
 import dev.nextftc.core.commands.groups.SequentialGroup
 import dev.nextftc.core.components.BindingsComponent
 import dev.nextftc.core.components.SubsystemComponent
@@ -44,9 +45,9 @@ class FarAutoRed : NextFTCOpMode() {
 
     override fun onStartButtonPressed() {
         val startPose = Pose(39.5, 8.5, Math.toRadians(90.0)).mirror()
-        val shootPose = Pose(50.0, 12.5, Math.toRadians(108.5)).mirror()
-        val secondShootPose = Pose(50.0, 12.5, Math.toRadians(108.5)).mirror()
-        val interPose = Pose(30.0, 6.5, Math.toRadians(180.0)).mirror()
+        val shootPose = Pose(50.0, 12.5, Math.toRadians(106.0)).mirror()
+        val secondShootPose = Pose(50.0, 12.5, Math.toRadians(106.0)).mirror()
+        val interPose = Pose(36.0, 6.5, Math.toRadians(180.0)).mirror()
         val scoopPose = Pose(14.5, 6.5, Math.toRadians(180.0)).mirror()
         val endPose = Pose(38.0, 12.5, Math.toRadians(187.0)).mirror()
         val startChain = buildPath(startPose, shootPose)
@@ -64,12 +65,14 @@ class FarAutoRed : NextFTCOpMode() {
             // Shoot preload
             FollowPath(startChain),
             Delay(0.1.seconds),
+            Fries.startShooting,
             Fries.fireLeft,
             Delay(0.3.seconds),
             Fries.fireCenter,
             Delay(0.3.seconds),
             Fries.fireRight,
             Delay(0.3.seconds),
+            Fries.endShooting,
             Fries.intakeAll,
 
             // Gather base
@@ -78,15 +81,22 @@ class FarAutoRed : NextFTCOpMode() {
             FollowPath(scoopChain),
 
             // Shoot base
-            FollowPath(scoopShootChain, true, 0.7),
-            Intake.off,
+            ParallelGroup(
+                FollowPath(scoopShootChain, true, 0.7),
+                SequentialGroup(
+                    Delay(0.3.seconds),
+                    Intake.off,
+                )
+            ),
             Delay(0.1.seconds),
+            Fries.startShooting,
             Fries.fireLeft,
             Delay(0.3.seconds),
             Fries.fireCenter,
             Delay(0.3.seconds),
             Fries.fireRight,
             Delay(0.3.seconds),
+            Fries.endShooting,
             Fries.intakeAll,
 
             // Wait for clear
@@ -96,15 +106,22 @@ class FarAutoRed : NextFTCOpMode() {
             FollowPath(scoopChain),
 
             // Shoot base
-            FollowPath(scoopShootChain, true, 0.7),
-            Intake.off,
+            ParallelGroup(
+                FollowPath(scoopShootChain, true, 0.7),
+                SequentialGroup(
+                    Delay(0.3.seconds),
+                    Intake.off,
+                )
+            ),
             Delay(0.1.seconds),
+            Fries.startShooting,
             Fries.fireLeft,
             Delay(0.3.seconds),
             Fries.fireCenter,
             Delay(0.3.seconds),
             Fries.fireRight,
             Delay(0.3.seconds),
+            Fries.endShooting,
             Fries.intakeAll,
 
             // Wait for clear
@@ -114,15 +131,22 @@ class FarAutoRed : NextFTCOpMode() {
             FollowPath(scoopChain),
 
             // Shoot base
-            FollowPath(scoopShootChain, true, 0.7),
-            Intake.off,
+            ParallelGroup(
+                FollowPath(scoopShootChain, true, 0.7),
+                SequentialGroup(
+                    Delay(0.3.seconds),
+                    Intake.off,
+                )
+            ),
             Delay(0.1.seconds),
+            Fries.startShooting,
             Fries.fireLeft,
             Delay(0.3.seconds),
             Fries.fireCenter,
             Delay(0.3.seconds),
             Fries.fireRight,
             Delay(0.3.seconds),
+            Fries.endShooting,
             Fries.intakeAll,
 
             FollowPath(endChain),
@@ -132,6 +156,7 @@ class FarAutoRed : NextFTCOpMode() {
     }
 
     override fun onInit() {
+        Fries.startRunning.schedule()
     }
 
     override fun onUpdate() {

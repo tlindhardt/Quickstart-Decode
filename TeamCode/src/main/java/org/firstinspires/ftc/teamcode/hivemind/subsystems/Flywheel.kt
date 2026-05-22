@@ -37,7 +37,7 @@ object Flywheel : Subsystem {
     private const val AUTONOMOUS = 1050.0
     private const val CLOSE = 1050.0
     private const val MID = 1150.0
-    private const val LONG = 1350.0
+    private const val LONG = 1340.0
 
     @JvmField
     var velPidCoefficients = PIDCoefficients(

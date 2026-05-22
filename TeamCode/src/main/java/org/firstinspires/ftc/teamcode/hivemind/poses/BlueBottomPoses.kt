@@ -21,7 +21,7 @@ open class BlueBottomPoses : Poses() {
     }
 
     override fun getShootPose(): Pose {
-        return Pose(52.0, 98.0, Math.toRadians(139.0))
+        return Pose(52.0, 98.0, Math.toRadians(141.5))
     }
 
     override fun getTopSpikeStartPose(): Pose {
@@ -45,7 +45,7 @@ open class BlueBottomPoses : Poses() {
     }
 
     override fun getBottomSpikeEndPose(): Pose {
-        return Pose(24.0, 34.0, Math.toRadians(270.0))
+        return Pose(24.0, 32.0, Math.toRadians(270.0))
     }
 
     override fun getLoadStartPose(): Pose {
