@@ -45,8 +45,8 @@ class FarAutoRed : NextFTCOpMode() {
 
     override fun onStartButtonPressed() {
         val startPose = Pose(39.5, 8.5, Math.toRadians(90.0)).mirror()
-        val shootPose = Pose(50.0, 12.5, Math.toRadians(106.0)).mirror()
-        val secondShootPose = Pose(50.0, 12.5, Math.toRadians(106.0)).mirror()
+        val shootPose = Pose(50.0, 12.5, Math.toRadians(105.5)).mirror()
+        val secondShootPose = Pose(50.0, 12.5, Math.toRadians(105.5)).mirror()
         val interPose = Pose(36.0, 6.5, Math.toRadians(180.0)).mirror()
         val scoopPose = Pose(14.5, 6.5, Math.toRadians(180.0)).mirror()
         val endPose = Pose(38.0, 12.5, Math.toRadians(187.0)).mirror()
@@ -76,6 +76,31 @@ class FarAutoRed : NextFTCOpMode() {
             Fries.intakeAll,
 
             // Gather base
+            Intake.forward,
+            FollowPath(interChain),
+            FollowPath(scoopChain),
+
+            // Shoot base
+            ParallelGroup(
+                FollowPath(scoopShootChain, true, 0.7),
+                SequentialGroup(
+                    Delay(0.3.seconds),
+                    Intake.off,
+                )
+            ),
+            Delay(0.1.seconds),
+            Fries.startShooting,
+            Fries.fireLeft,
+            Delay(0.3.seconds),
+            Fries.fireCenter,
+            Delay(0.3.seconds),
+            Fries.fireRight,
+            Delay(0.3.seconds),
+            Fries.endShooting,
+            Fries.intakeAll,
+
+            // Wait for clear
+            Delay(1.seconds),// Gather base
             Intake.forward,
             FollowPath(interChain),
             FollowPath(scoopChain),

@@ -2,11 +2,17 @@ package org.firstinspires.ftc.teamcode.hivemind.subsystems
 
 import com.pedropathing.geometry.Pose
 import dev.nextftc.extensions.pedro.PedroComponent.Companion.follower
-import dev.nextftc.ftc.ActiveOpMode
 import dev.nextftc.hardware.driving.DriverControlledCommand
+import dev.nextftc.control.KineticState
+import dev.nextftc.control.feedback.AngleType
+import dev.nextftc.control.feedback.AngularFeedback
+import dev.nextftc.control.feedback.FeedbackType
+import dev.nextftc.control.feedback.PIDCoefficients
+import dev.nextftc.control.feedback.PIDElement
 import org.firstinspires.ftc.teamcode.hivemind.poses.BlueBottomPoses
 import org.firstinspires.ftc.teamcode.hivemind.poses.RedBottomPoses
 import java.util.function.Supplier
+import kotlin.math.abs
 import kotlin.math.atan2
 
 class AutoShootPedroDriverControlled @JvmOverloads constructor(
@@ -20,17 +26,13 @@ class AutoShootPedroDriverControlled @JvmOverloads constructor(
     val isCalibration: Boolean
 ) : DriverControlledCommand(drivePower, strafePower, turnPower) {
 
-    val autoRotationMultiplier = 0.5
+    val headingCoefficients = PIDCoefficients(kP = 1.0, kI = 0.0, kD = 0.155)
+    val autoRotationDeadband = Math.toRadians(3.0)
 
-    var x = 144.0
-    var y = 134.0
-//
-//    enum class Depot(val x: Double, val y: Double) {
-//        RED_TOP(150.0, 144.0),
-//        RED(144.0, 140.0),
-//        BLUE_TOP(-8.0, 144.0),
-//        BLUE(0.0, 140.0)
-//    }
+    private val headingController = AngularFeedback(
+        AngleType.RADIANS,
+        PIDElement(FeedbackType.POSITION, headingCoefficients)
+    )
 
     override fun start() {
         if (isCalibration) {
@@ -60,20 +62,13 @@ class AutoShootPedroDriverControlled @JvmOverloads constructor(
         }
 
 //        if (autoTracking.get()) {
-////            val depot = getDepot(follower.pose, isBlue)
-//            if (isBlue) {
-//                val blueHeading = calculateHeading(follower.pose)
-//                turn = (AngleUnit.normalizeRadians(blueHeading - follower.heading) * autoRotationMultiplier).coerceIn(
-//                    -1.0,
-//                    1.0
-//                )
-//            } else {
-//                val redHeading = calculateHeading(follower.pose)
-//                turn = (AngleUnit.normalizeRadians(redHeading - follower.heading) * autoRotationMultiplier).coerceIn(
-//                    -1.0,
-//                    1.0
-//                )
-//            }
+//            val targetX = if (isBlue) 0.0 else 144.0
+//            val error = AngleType.RADIANS.normalize(calculateHeading(follower.pose, targetX) - follower.heading)
+//            turn = if (abs(error) < autoRotationDeadband) 0.0
+//                   else headingController.calculate(KineticState(position = error, velocity = -follower.angularVelocity)).coerceIn(-1.0, 1.0)
+//        } else {
+        headingController.reset()
+        turn *= 0.55
 //        }
 
         // Because pedro is oriented in the red direction we need to flip it for blue for our auto movements to work
@@ -85,29 +80,16 @@ class AutoShootPedroDriverControlled @JvmOverloads constructor(
 //        ActiveOpMode.telemetry.addData("x", x)
 //        ActiveOpMode.telemetry.addData("y", y)
 
-        follower.setTeleOpDrive(drive, strafe, turn * 0.55, robotCentric)
+        follower.setTeleOpDrive(drive, strafe, turn, robotCentric)
     }
-//
-//    private fun getDepot(pose: Pose, isBlue: Boolean): Depot {
-//        if (isBlue) {
-//            if (pose.y > 110) {
-//                return Depot.BLUE_TOP
-//            } else return Depot.BLUE
-//        } else {
-//            if (pose.y > 110) {
-//                return Depot.RED_TOP
-//            } else return Depot.RED
-//        }
-//
-//    }
 
     override fun stop(interrupted: Boolean) {
         if (interrupted) follower.breakFollowing()
     }
 
-    private fun calculateHeading(pose: Pose): Double {
-        val dx = x - pose.x
-        val dy = y - pose.y
+    private fun calculateHeading(pose: Pose, targetX: Double): Double {
+        val dx = targetX - pose.x
+        val dy = 134.0 - pose.y
         return atan2(dy, dx)
     }
 }
